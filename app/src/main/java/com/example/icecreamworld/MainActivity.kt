@@ -33,11 +33,14 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController,
-                    "AddShopScreen"
+                    "EditShopScreen"
                 )
                 {
                     composable("AddShopScreen") {
                         AddShopScreen(navController)
+                    }
+                    composable("EditShopScreen") {
+                        EditShopScreen(navController)
                     }
                 }
             }
