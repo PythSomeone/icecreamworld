@@ -10,14 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.AddShopScreen
+import com.example.icecreamworld.navigation.NavigationPage
 import com.example.icecreamworld.ui.theme.IceCreamWorldTheme
-
-//import com.example.noinstagram.ui.theme.NoInstagramTheme
-//import com.example.noinstagram.utils.database.PostHandler
-//import com.example.noinstagram.utils.database.UserHandler
-//import com.example.noinstagram.viewmodel.AuthViewModel
-//import com.google.firebase.auth.FirebaseAuth
-
 
 class MainActivity : ComponentActivity() {
 //    private val authViewModel: AuthViewModel by viewModels()
@@ -30,19 +24,7 @@ class MainActivity : ComponentActivity() {
 //        PostHandler.postListener()
         setContent {
             IceCreamWorldTheme {
-                val navController = rememberNavController()
-                NavHost(
-                    navController,
-                    "EditShopScreen"
-                )
-                {
-                    composable("AddShopScreen") {
-                        AddShopScreen(navController)
-                    }
-                    composable("EditShopScreen") {
-                        EditShopScreen(navController)
-                    }
-                }
+                NavigationPage()
             }
         }
     }
