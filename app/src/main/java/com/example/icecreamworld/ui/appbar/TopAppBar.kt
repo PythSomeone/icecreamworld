@@ -1,4 +1,4 @@
-package com.example.icecreamworld.ui.topappbar
+package com.example.icecreamworld.ui.appbar
 
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -28,10 +28,3 @@ fun TopAppBar(
         elevation = 0.dp
     )
 }
-
-// sample usage of TopAppBar
-// TopAppBar(
-// backgroundColor = BackgroundColor,
-// onButtonClicked = { openDrawer() },
-// title = "Home",
-// modifier = Modifier.fillMaxWidth())

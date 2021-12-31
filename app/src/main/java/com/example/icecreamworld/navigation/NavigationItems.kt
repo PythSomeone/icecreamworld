@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.AddShopScreen
 import com.example.icecreamworld.EditShopScreen
 import com.example.icecreamworld.HomeScreen
+import com.example.icecreamworld.ProposedScreen
 import com.example.icecreamworld.ui.components.Drawer
 import com.example.icecreamworld.ui.components.DrawerScreens
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ fun NavigationPage() {
             }
             composable(DrawerScreens.Proposed.route) {
                 //Sample Usage of drawer. Inside function simply use TopAppBar with "onButtonClicked = { openDrawer() }"
-                //ProposedScreen(openDrawer = {openDrawer()})
+                ProposedScreen ( openDrawer = {openDrawer()}, navController)
             }
             composable(DrawerScreens.Search.route) {
 
