@@ -1,5 +1,6 @@
 package com.example.icecreamworld
 
+import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,18 +19,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.appbar.TopAppBar
+import com.example.icecreamworld.ui.components.GoogleMaps
 import com.example.icecreamworld.ui.components.SearchSection
 import com.example.icecreamworld.ui.components.ShopsCard
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
-
+import com.google.android.gms.tasks.Task
 
 @Composable
-fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
+fun MapScreen(openDrawer: () -> Unit, navController: NavHostController, location: Task<Location>) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
-    val text = "The nearest ice cream shop"
-
+    val text = "ICS Maps"
+    val currentLocation = location.result
     val shopList = listOf(
         Shop(
             "gjo",
@@ -52,7 +54,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
             TopAppBar(
                 backgroundColor = BackgroundColor,
                 onButtonClicked = { openDrawer() },
-                title = "Proposed",
+                title = "Maps",
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -77,14 +79,20 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 navController = navController
             )
             Spacer(modifier = Modifier.height(20.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(shopList) { shop ->
-                    ShopsCard(shop.name!!, shop.description!!, shop.image!!)
+            Column(modifier = Modifier.fillMaxHeight()) {
+                Box(modifier = Modifier.weight(1f)){
+                    GoogleMaps(currentLocation = currentLocation)
+                }
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(shopList) { shop ->
+                        ShopsCard(shop.name!!, shop.description!!, shop.image!!)
+                    }
                 }
             }
+
         }
     }
 }
