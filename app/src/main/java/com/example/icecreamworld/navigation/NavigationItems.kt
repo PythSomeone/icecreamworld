@@ -1,5 +1,6 @@
 package com.example.icecreamworld.navigation
 
+import android.location.Location
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.ModalDrawer
@@ -9,17 +10,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.icecreamworld.AddShopScreen
-import com.example.icecreamworld.EditShopScreen
-import com.example.icecreamworld.HomeScreen
-import com.example.icecreamworld.ProposedScreen
+import com.example.icecreamworld.*
 import com.example.icecreamworld.ui.components.Drawer
 import com.example.icecreamworld.ui.components.DrawerScreens
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @Composable
-fun NavigationPage() {
+fun NavigationPage(location: Task<Location>) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -60,7 +59,7 @@ fun NavigationPage() {
 
             }
             composable(DrawerScreens.Map.route) {
-
+                MapScreen(openDrawer = { openDrawer() }, navController, location)
             }
             composable(DrawerScreens.ManagementPanel.route) {
 
