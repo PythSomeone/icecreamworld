@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +41,7 @@ import kotlin.collections.ArrayList
 
 @Composable
 fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
-    var value by remember { mutableStateOf("") }
+    var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "The nearest ice cream shop"
 
@@ -67,7 +68,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 fontWeight = FontWeight.Bold
             )
             SearchSection(
-                value = value,
+                textValue = value,
                 label = "",
                 onDoneActionClick =
                 {
@@ -75,7 +76,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 },
                 onValueChanged = {},
                 onClearClick = {
-                    value = ""
+                    value = value
                     view.clearFocus()
                 },
                 navController = navController
@@ -99,7 +100,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
 @Composable
 fun SearchSection(
     modifier: Modifier = Modifier,
-    value: String,
+    textValue: MutableState<TextFieldValue>,
     label: String,
     onDoneActionClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
@@ -116,17 +117,15 @@ fun SearchSection(
         verticalAlignment = CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        var value by remember {
-            mutableStateOf(value)
-        }
         OutlinedTextField(
             modifier = modifier
                 .fillMaxWidth(.6f)
                 .onFocusChanged { onFocusChanged(it) }
                 .align(CenterVertically),
-            value = value,
+            value = textValue.value,
             onValueChange = {
-                value = it
+                value ->
+                textValue.value = value
                 state = true
             },
             label = { Text(text = label) },
@@ -136,7 +135,7 @@ fun SearchSection(
                 IconButton(onClick = {
                     onClearClick()
                     state = false
-                    value = ""
+                    textValue.value = TextFieldValue("")
                 }) {
                     Icon(imageVector = Icons.Filled.Clear, contentDescription = "Clear")
                 }
@@ -154,7 +153,7 @@ fun SearchSection(
     }
     if (state)
     {
-        ShopListInSearch(state = value)
+        ShopListInSearch(state = textValue)
     }
 }
 
@@ -177,7 +176,7 @@ fun ShopListItem(nameText: String, onItemClick: (String) -> Unit) {
 }
 
 @Composable
-fun ShopListInSearch(state: String){
+fun ShopListInSearch(state: MutableState<TextFieldValue>){
     val shopList = arrayListOf(
         Shop("gjo","dsafas","https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"),
         Shop("abc","def","https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD")
@@ -186,16 +185,16 @@ fun ShopListInSearch(state: String){
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 50.dp)) {
-        filteredShops = if (state.isEmpty()) {
+        filteredShops = if (state.value.text.isEmpty()) {
             shopList
         } else {
             val resultList = ArrayList<Shop>()
             for (shop in shopList) {
                 if (shop.name!!.lowercase(Locale.getDefault())
-                        .contains(state.lowercase(Locale.getDefault()))
+                        .contains(state.value.text.lowercase(Locale.getDefault()))
                     || shop.description!!.lowercase(Locale.getDefault())
-                        .contains(state.lowercase(Locale.getDefault()))
-                ) {
+                        .contains(state.value.text.lowercase(Locale.getDefault())
+                )) {
                     resultList.add(shop)
                 }
             }
