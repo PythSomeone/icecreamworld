@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "344201497866",
+    "project_id": "icecreamworld-22d70",
+    "storage_bucket": "icecreamworld-22d70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344201497866:android:63afbcba7689c3bff43ef3",
+        "android_client_info": {
+          "package_name": "com.example.icecreamworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344201497866-bb17cv7pfmksks16q9ookh5s9acild6k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNgy2YpromGRzchoU3CEh6xBnaIDI8t-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344201497866-bb17cv7pfmksks16q9ookh5s9acild6k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
