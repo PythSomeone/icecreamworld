@@ -2,62 +2,37 @@ package com.example.icecreamworld.data.repository
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import com.example.icecreamworld.data.handler.Handler
+import com.example.icecreamworld.data.handler.RefName
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 
-object ShopRepository {
+object ShopRepository: Repository(RefName.Shops) {
 
-    private val _shops = mutableStateOf<MutableList<DataSnapshot>>(mutableListOf())
-    val shops: State<MutableList<DataSnapshot>> = _shops
+    fun listenToChanges() {
+        Handler(refName).initializeListener(Listener)
+    }
 
-    internal fun addShop(snapshot: DataSnapshot) {
-        if (snapshot.key != null) {
-            _shops.component1().add(snapshot)
+    private object Listener: ChildEventListener {
+        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+            addData(snapshot)
+            Log.d(ContentValues.TAG, "$snapshot was added to local repository")
         }
-    }
-    internal fun changeShop(snapshot: DataSnapshot) {
-        snapshot.key?.let { shopIndex(it) }
-            .run {
-                if (this != null)
-                    _shops.component1().set(this, snapshot)
-                else throw error("There is no shop with this key, ${snapshot.key}")
-            }
-    }
-    internal fun removeShop(snapshot: DataSnapshot) {
-        snapshot.key?.let { shopIndex(it) }
-            .run {
-                if (this != null)
-                    _shops.component1().removeAt(this)
-                else throw error("There is no shop with this key, ${snapshot.key}")
-            }
-    }
 
-    private fun shopIndex(key: String): Int? {
-        _shops.component1().forEachIndexed { index, snapshot ->
-            if (snapshot.key.equals(key))
-                return index
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            changeData(snapshot)
+            Log.d(ContentValues.TAG, "$snapshot was changed in local repository")
         }
-        return null
+
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            removeData(snapshot)
+            Log.d(ContentValues.TAG, "$snapshot was removed from local repository")
+        }
+
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+        override fun onCancelled(error: DatabaseError) {}
     }
 
 }
 
-object ShopListener: ChildEventListener {
-    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-        ShopRepository.addShop(snapshot)
-        Log.d(ContentValues.TAG, "$snapshot was added to local repository")
-    }
-    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-        ShopRepository.changeShop(snapshot)
-        Log.d(ContentValues.TAG, "$snapshot was changed in local repository")
-    }
-    override fun onChildRemoved(snapshot: DataSnapshot) {
-        ShopRepository.removeShop(snapshot)
-        Log.d(ContentValues.TAG, "$snapshot was removed from local repository")
-    }
-    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-    override fun onCancelled(error: DatabaseError) {}
-}
