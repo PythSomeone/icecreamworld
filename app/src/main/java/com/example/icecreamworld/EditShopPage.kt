@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.model.Shop
-import com.example.icecreamworld.ui.components.EditProfileSection
+import com.example.icecreamworld.ui.components.EditShopSection
 import kotlinx.coroutines.delay
 
 @ExperimentalFoundationApi
@@ -26,7 +26,7 @@ fun EditShopScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(4.dp))
-        EditProfileSection(shop, navController)
+        EditShopSection(shop, navController)
         Spacer(modifier = Modifier.height(25.dp))
         //refresh
         LaunchedEffect(refreshing) {

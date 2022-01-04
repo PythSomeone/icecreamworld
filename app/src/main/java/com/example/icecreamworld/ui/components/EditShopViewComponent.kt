@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -35,7 +36,7 @@ import com.example.icecreamworld.viewmodel.ShopViewModel
 
 @ExperimentalFoundationApi
 @Composable
-fun EditProfileSection(
+fun EditShopSection(
     shop: Shop,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -44,6 +45,7 @@ fun EditProfileSection(
     ) {
     var description = remember { mutableStateOf(shop.description) }
     var name = remember { mutableStateOf(shop.name) }
+    var website = remember { mutableStateOf(shop.websiteLink) }
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -124,7 +126,6 @@ fun EditProfileSection(
 
                 }
 
-
                 Spacer(Modifier.height(20.dp))
                 ChoosePhotoButton(launcher)
 
@@ -132,6 +133,7 @@ fun EditProfileSection(
 
                 InputTextField(label = "Name", name)
                 InputTextField(label = "Description", description)
+                InputTextField(label = "Website", website)
 
                 Spacer(Modifier.height(20.dp))
 
