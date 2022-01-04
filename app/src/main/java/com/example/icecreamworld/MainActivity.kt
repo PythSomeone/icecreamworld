@@ -11,8 +11,10 @@ import com.example.icecreamworld.ui.theme.IceCreamWorldTheme
 import androidx.core.app.ActivityCompat
 
 import android.content.pm.PackageManager
+import android.view.WindowManager
 
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.lang.Exception
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         super.onCreate(savedInstanceState)
 //        UserHandler.userListener()
@@ -48,6 +51,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             IceCreamWorldTheme {
                 NavigationPage(location)
+//                EditShopScreen(rememberNavController())
             }
         }
     }

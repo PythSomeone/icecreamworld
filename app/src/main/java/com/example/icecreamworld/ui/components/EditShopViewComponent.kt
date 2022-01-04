@@ -14,7 +14,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.icecreamworld.model.Product
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.buttons.ChoosePhotoButton
 import com.example.icecreamworld.ui.outlinedtextfields.InputTextField
@@ -44,8 +48,16 @@ fun EditShopSection(
 
     ) {
     var description = remember { mutableStateOf(shop.description) }
+
+    var menu = remember { mutableStateOf(shop.menu) }
+    val mutableIterator = menu.iterator()
+
     var name = remember { mutableStateOf(shop.name) }
     var website = remember { mutableStateOf(shop.websiteLink) }
+    var test1 = remember { mutableStateOf(shop.websiteLink) }
+    var test2 = remember { mutableStateOf(shop.websiteLink) }
+    var test3 = remember { mutableStateOf(shop.websiteLink) }
+
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -57,6 +69,7 @@ fun EditShopSection(
         imageUri = uri
     }
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -66,14 +79,18 @@ fun EditShopSection(
         ) {
 
             Spacer(modifier = Modifier.width(16.dp))
+
         }
 
+
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(state = scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = {
-                EditProfileTextBox()
 
+                EditProfileTextBox()
                 Spacer(Modifier.height(20.dp))
                 if((imageUri != null)) {
                     Column(
@@ -134,23 +151,25 @@ fun EditShopSection(
                 InputTextField(label = "Name", name)
                 InputTextField(label = "Description", description)
                 InputTextField(label = "Website", website)
+                InputTextField(label = "test1", test1)
+                InputTextField(label = "test2", test2)
+                InputTextField(label = "test3", test3)
 
                 Spacer(Modifier.height(20.dp))
-
                 Button(
                     onClick = {
                         launcher.launch("image/*")
                     },
-                    shape = RoundedCornerShape(6.dp),
-                    modifier = Modifier
-                        .width(200.dp),
-                    content = {
-                        Text(
-                            text = "Change location",
-                            color = Color.White
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                shape = RoundedCornerShape(6.dp),
+                modifier = Modifier
+                    .width(200.dp),
+                content = {
+                    Text(
+                        text = "Change location",
+                        color = Color.White
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
                 )
 
                 Spacer(Modifier.height(20.dp))
@@ -185,6 +204,19 @@ fun EditShopSection(
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
                 )
 
+//                LazyColumn(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentPadding = PaddingValues(16.dp)
+//                ) {
+//                    items(productList) { shop ->
+//                        ShopsCard(shop.name!!, shop.description!!, shop.image!!)
+//                    }
+//                }
+//                for (product in productList) {
+//                    product
+//                    InputTextField(label = "Name", product)
+//                    InputTextField(label = "Description", description)
+//                }
 
             }
         )
