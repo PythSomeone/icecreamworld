@@ -82,7 +82,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 contentPadding = PaddingValues(16.dp)
             ) {
                 items(shopList) { shop ->
-                    ShopsCard(shop.name!!, shop.description!!, shop.image!!)
+                    ShopsCard(navController, shop.name!!, shop.description!!, shop.image!!)
                 }
             }
         }
