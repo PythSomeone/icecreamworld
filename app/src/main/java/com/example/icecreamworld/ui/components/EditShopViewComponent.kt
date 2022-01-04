@@ -1,5 +1,6 @@
 package com.example.icecreamworld.ui.components
 
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -11,40 +12,28 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import coil.compose.rememberImagePainter
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.icecreamworld.model.Shop
+import com.example.icecreamworld.ui.buttons.ChoosePhotoButton
+import com.example.icecreamworld.ui.outlinedtextfields.InputTextField
 import com.example.icecreamworld.ui.theme.ButtonBrown
-import com.example.icecreamworld.ui.theme.OutlineBrown
 import com.example.icecreamworld.viewmodel.ShopViewModel
 
 
+@ExperimentalFoundationApi
 @Composable
 fun EditProfileSection(
     shop: Shop,
@@ -53,8 +42,8 @@ fun EditProfileSection(
     viewModel: ShopViewModel = viewModel(),
 
     ) {
-    var description by remember { mutableStateOf(shop.description) }
-    var name by remember { mutableStateOf(shop.name) }
+    var description = remember { mutableStateOf(shop.description) }
+    var name = remember { mutableStateOf(shop.name) }
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -137,75 +126,12 @@ fun EditProfileSection(
 
 
                 Spacer(Modifier.height(20.dp))
-
-                Button(
-                    onClick = {
-                        launcher.launch("image/*")
-                    },
-                    shape = RoundedCornerShape(6.dp),
-                    modifier = Modifier
-                        .width(200.dp),
-                    content = {
-                        Text(
-                            text = "Choose photo",
-                            color = Color.White
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
-                )
+                ChoosePhotoButton(launcher)
 
                 Spacer(Modifier.height(20.dp))
 
-                OutlinedTextField(
-                    value = name!!,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = OutlineBrown,
-                        unfocusedBorderColor = OutlineBrown,
-                    ),
-                    shape = RoundedCornerShape(15.dp),
-                    label =
-                    {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = "Change name",
-                            fontSize = 15.sp,
-                            color = ButtonBrown,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                    },
-                    onValueChange = {
-                        name = it
-                    },
-                    modifier = Modifier
-                        .width(300.dp)
-                )
-
-
-                OutlinedTextField(
-                    value = description!!,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = OutlineBrown,
-                        unfocusedBorderColor = OutlineBrown,
-                    ),
-                    shape = RoundedCornerShape(15.dp),
-                    label =
-                    {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = "Change description",
-                            fontSize = 15.sp,
-                            color = ButtonBrown,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                    },
-                    onValueChange = {
-                        description = it
-                    },
-                    modifier = Modifier
-                        .width(300.dp)
-                )
+                InputTextField(label = "Name", name)
+                InputTextField(label = "Description", description)
 
                 Spacer(Modifier.height(20.dp))
 
@@ -234,6 +160,9 @@ fun EditProfileSection(
                             "Changes submitted...",
                             Toast.LENGTH_SHORT
                         ).show()
+                        Log.d(TAG, description.value.toString())
+                        Log.d(TAG, name.value.toString())
+                        Log.d(TAG, imageUri.toString())
 //                        val uriExists = imageUri!=null
 //                        if(uriExists) {
 //                            viewModel.changeData(user, description!!, displayName!!, imageUri!!)
