@@ -50,7 +50,6 @@ fun EditShopSection(
     var description = remember { mutableStateOf(shop.description) }
 
     var menu = remember { mutableStateOf(shop.menu) }
-    val mutableIterator = menu.iterator()
 
     var name = remember { mutableStateOf(shop.name) }
     var website = remember { mutableStateOf(shop.websiteLink) }
