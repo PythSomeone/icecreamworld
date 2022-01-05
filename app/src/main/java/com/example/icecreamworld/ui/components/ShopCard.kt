@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.icecreamworld.R
+import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.theme.CanvasBrown
 
 
@@ -23,6 +24,13 @@ fun ShopsCard(
     navController: NavHostController,
     name: String, description: String,
     image: String) {
+    val shop = Shop(
+        "123",
+        "abc",
+        "def",
+        "Wrocław, Legnicka 7"
+    )
+    val id = 123
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -59,7 +67,7 @@ fun ShopsCard(
                     color = CanvasBrown
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                FloatingActionButton(onClick = { navController.navigate("ShopScreen") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
+                FloatingActionButton(onClick = { navController.navigate("ShopScreen/${shop.id}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
                     .height(30.dp)
                     .width(150.dp)) {
                     Text("See More")

@@ -42,6 +42,7 @@ import com.example.icecreamworld.ui.theme.OutlineBrown
 @Composable
 fun ShopScreen(
     navController: NavHostController,
+    shopId: String?
 ) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current

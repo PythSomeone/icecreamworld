@@ -43,6 +43,8 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
         )
     )
 
+
+
     Box(
         Modifier
             .fillMaxSize()
