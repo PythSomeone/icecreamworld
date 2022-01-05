@@ -16,12 +16,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.appbar.TopAppBar
 import com.example.icecreamworld.ui.components.SearchSection
 import com.example.icecreamworld.ui.components.ShopsCard
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
+import com.google.firebase.database.ktx.getValue
 
 
 @Composable
@@ -29,6 +31,12 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "The nearest ice cream shop"
+
+    val shops = ShopRepository
+    shops.data.value.forEach{
+        shops.getShop(it.key!!)
+    }
+
 
     val shopList = listOf(
         Shop(
@@ -83,8 +91,13 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(shopList) { shop ->
-                    ShopsCard(navController, shop.name!!, shop.description!!, shop.image!!)
+                items(shops.data.value) { snapshot ->
+                    ShopsCard(
+                        navController,
+                        snapshot.getValue<Shop>()?.name!!,
+                        snapshot.getValue<Shop>()?.description!!,
+                        snapshot.getValue<Shop>()?.image!!,
+                        snapshot.key!!)
                 }
             }
         }

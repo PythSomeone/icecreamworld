@@ -1,5 +1,6 @@
 package com.example.icecreamworld.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -22,15 +23,18 @@ import com.example.icecreamworld.ui.theme.CanvasBrown
 @Composable
 fun ShopsCard(
     navController: NavHostController,
-    name: String, description: String,
-    image: String) {
+    name: String,
+    description: String,
+    image: String,
+    key: String,
+) {
     val shop = Shop(
         "123",
         "abc",
         "def",
         "Wrocław, Legnicka 7"
     )
-    val id = 123
+    Log.d("TAG", key.toString())
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -67,7 +71,7 @@ fun ShopsCard(
                     color = CanvasBrown
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                FloatingActionButton(onClick = { navController.navigate("ShopScreen/${shop.id}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
+                FloatingActionButton(onClick = { navController.navigate("ShopScreen/${key}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
                     .height(30.dp)
                     .width(150.dp)) {
                     Text("See More")

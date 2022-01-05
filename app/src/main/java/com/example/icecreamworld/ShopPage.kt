@@ -1,5 +1,6 @@
 package com.example.icecreamworld
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Product
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.appbar.TopAppBar
@@ -53,13 +55,15 @@ fun ShopScreen(
     val menu = ArrayList<Product>()
     menu.add(product1)
     menu.add(product2)
-    val shop = Shop(
-        "abc",
-        "def",
-        image = "https://firebasestorage.googleapis.com/v0/b/noinstagram-e6c32.appspot.com/o/DEFAULT.png?alt=media&token=5909137c-8e0c-48d1-aa4d-6061cb0b6132",
-        menu = menu,
-        location = "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
-    )
+    val shop = ShopRepository.getShop(shopId!!)
+    Log.d("shop", shop.toString())
+//    val shop = Shop(
+//        "abc",
+//        "def",
+//        image = "https://firebasestorage.googleapis.com/v0/b/noinstagram-e6c32.appspot.com/o/DEFAULT.png?alt=media&token=5909137c-8e0c-48d1-aa4d-6061cb0b6132",
+//        menu = menu,
+//        location = "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
+//    )
 
 
     Box(
@@ -89,7 +93,7 @@ fun ShopScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text,
+                shop.name!!,
                 color = CanvasBrown,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
@@ -110,7 +114,28 @@ fun ShopScreen(
                 Text(
                     modifier = Modifier
                         .padding(10.dp),
-                    text = "description",
+                    text = shop.description!!,
+                    style = MaterialTheme.typography.h6,
+                )
+
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Card(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.medium,
+                elevation = 15.dp,
+                backgroundColor = MaterialTheme.colors.surface
+            ) {
+
+                Text(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    text = shop.location!!,
                     style = MaterialTheme.typography.h6,
                 )
 
