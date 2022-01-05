@@ -13,8 +13,7 @@ import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
 
 import androidx.core.content.ContextCompat
-import com.example.icecreamworld.data.handler.RefName
-import com.example.icecreamworld.data.handler.Handler
+import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.data.repository.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -51,7 +50,8 @@ class MainActivity : ComponentActivity() {
         val location = fusedLocationClient.lastLocation
         setContent {
             IceCreamWorldTheme {
-                NavigationPage(location)
+                //NavigationPage(location)
+                EditShopScreen(rememberNavController())
             }
         }
     }
