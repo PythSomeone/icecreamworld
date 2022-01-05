@@ -13,6 +13,9 @@ import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
 
 import androidx.core.content.ContextCompat
+import com.example.icecreamworld.data.handler.RefName
+import com.example.icecreamworld.data.handler.Handler
+import com.example.icecreamworld.data.repository.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.lang.Exception
@@ -27,8 +30,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         super.onCreate(savedInstanceState)
-//        UserHandler.userListener()
-//        PostHandler.postListener()
+        ShopRepository.listenToChanges()
+        ProductRepository.listenToChanges()
+        TagRepository.listenToChanges()
         try {
             if (ContextCompat.checkSelfPermission(
                     applicationContext,
