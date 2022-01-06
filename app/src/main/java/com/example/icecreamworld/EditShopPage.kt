@@ -19,7 +19,8 @@ import kotlinx.coroutines.delay
 @ExperimentalFoundationApi
 @Composable
 fun EditShopScreen(
-    navController: NavController
+    navController: NavController,
+    shopId: String?
 ) {
     var shop = Shop()
     var refreshing by remember { mutableStateOf(false) }
@@ -38,10 +39,10 @@ fun EditShopScreen(
     }
 }
 
-@ExperimentalFoundationApi
-@Composable
-@Preview
-fun EditShopPreview() {
-    EditShopScreen(rememberNavController())
-}
+//@ExperimentalFoundationApi
+//@Composable
+//@Preview
+//fun EditShopPreview() {
+//    EditShopScreen(rememberNavController())
+//}
 
