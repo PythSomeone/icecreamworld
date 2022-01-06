@@ -1,4 +1,4 @@
-package com.example.icecreamworld.data.handler
+package com.example.icecreamworld.data
 
 import android.content.ContentValues
 import android.util.Log
@@ -8,7 +8,7 @@ import com.google.firebase.ktx.Firebase
 
 enum class RefName {
     Shops,
-    Products,
+    ShopForms,
     Tags
 }
 

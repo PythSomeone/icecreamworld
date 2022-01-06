@@ -3,10 +3,10 @@ package com.example.icecreamworld.data.repository
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import com.example.icecreamworld.data.handler.RefName
+import com.example.icecreamworld.data.Handler
 import com.google.firebase.database.DataSnapshot
 
-open class Repository(val refName: RefName) {
+open class Repository(protected val handler: Handler) {
 
     private val _data = mutableStateOf<MutableList<DataSnapshot>>(mutableListOf())
     val data: State<MutableList<DataSnapshot>> = _data
@@ -33,7 +33,7 @@ open class Repository(val refName: RefName) {
             }
     }
 
-    private fun dataIndex(key: String): Int? {
+    protected fun dataIndex(key: String): Int? {
         _data.component1().forEachIndexed { index, snapshot ->
             if (snapshot.key.equals(key))
                 return index
