@@ -6,5 +6,5 @@ data class Shop(
     var location: String? = "",
     val websiteLink: String? = "",
     var image: String? = "",
-    val menu: MutableList<Product> = mutableListOf(),
+    val menu: MutableList<Product> = mutableListOf()
 )

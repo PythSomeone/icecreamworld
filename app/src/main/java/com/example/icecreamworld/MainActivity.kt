@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         super.onCreate(savedInstanceState)
         ShopRepository.listenToChanges()
+        ShopFormRepository.listenToChanges()
         TagRepository.listenToChanges()
         try {
             if (ContextCompat.checkSelfPermission(

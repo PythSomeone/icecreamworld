@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 
 enum class RefName {
     Shops,
+    ShopForms,
     Tags
 }
 
