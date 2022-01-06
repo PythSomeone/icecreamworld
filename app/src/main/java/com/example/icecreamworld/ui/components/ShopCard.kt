@@ -13,12 +13,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.icecreamworld.R
+import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.theme.CanvasBrown
 
 
 @Composable
-fun ShopsCard(name: String, description: String, image: String) {
+fun ShopsCard(
+    navController: NavHostController,
+    name: String,
+    description: String,
+    image: String,
+    key: String,
+) {
+
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -55,7 +64,7 @@ fun ShopsCard(name: String, description: String, image: String) {
                     color = CanvasBrown
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                FloatingActionButton(onClick = { /*TODO*/ }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
+                FloatingActionButton(onClick = { navController.navigate("Shop/${key}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
                     .height(30.dp)
                     .width(150.dp)) {
                     Text("See More")

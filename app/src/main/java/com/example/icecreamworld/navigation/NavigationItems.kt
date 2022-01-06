@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.*
+import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.components.Drawer
 import com.example.icecreamworld.ui.components.DrawerScreens
 import com.google.android.gms.tasks.Task
@@ -76,8 +77,17 @@ fun NavigationPage(location: Task<Location>) {
             composable("AddShopScreen") {
                 AddShopScreen(navController)
             }
-            composable("EditShopScreen") {
-                EditShopScreen(navController)
+            composable("EditShop/{ShopId}") { backstackEntry ->
+                EditShopScreen(
+                    navController,
+                    backstackEntry.arguments?.getString("ShopId"),
+                )
+            }
+            composable("Shop/{ShopId}") { backstackEntry ->
+                ShopScreen(
+                    navController,
+                    backstackEntry.arguments?.getString("ShopId"),
+                )
             }
         }
     }
