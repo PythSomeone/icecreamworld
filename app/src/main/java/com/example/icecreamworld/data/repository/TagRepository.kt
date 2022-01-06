@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.util.Log
 import com.example.icecreamworld.data.Handler
 import com.example.icecreamworld.data.RefName
+import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.Tag
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -35,9 +36,13 @@ object TagRepository: Repository(Handler(RefName.Tags)) {
         return Tag()
     }
 
-    fun tagUsed(id: String) {
-        val tag = getTag(id)
-        handler.changeValue(id, tag.copy(numberOfUses = tag.numberOfUses.inc()))
+    fun getId(name: String): String {
+        data.value.forEach {
+            val tag = it.getValue<Tag>() as Tag
+            if (tag.name == name)
+                return it.key!!
+        }
+        return ""
     }
 
     fun listenToChanges() {
@@ -62,6 +67,67 @@ object TagRepository: Repository(Handler(RefName.Tags)) {
 
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
         override fun onCancelled(error: DatabaseError) {}
+    }
+
+}
+
+class TagUses(
+    private val shop: Shop,
+    private val previousShop: Shop? = null) {
+
+    private val usedTags = countTagsUsed()
+
+    fun increase() {
+        usedTags.forEach {
+            tagUsed(TagRepository.getId(it.name!!), it.numberOfUses)
+        }
+    }
+    fun decrease() {
+        usedTags.forEach {
+            tagUsed(TagRepository.getId(it.name!!), -it.numberOfUses)
+        }
+    }
+    private fun countTagsUsed(): MutableList<Tag> {
+        val tagsUsed = mutableListOf<Tag>()
+
+        for (product in shop.menu) {
+            for (tag in product.tags) {
+                if (tagsUsed.isEmpty())
+                    tagsUsed.add(tag.copy(numberOfUses = 1))
+                else {
+                    for (it in tagsUsed) {
+                        if (it.name == tag.name) {
+                            it.numberOfUses += 1
+                            break
+                        }
+                        tagsUsed.add(tag.copy(numberOfUses = 1))
+                    }
+                }
+            }
+        }
+        if (previousShop != null) {
+            for (product in previousShop.menu) {
+                for (tag in product.tags) {
+                    if (tagsUsed.isEmpty())
+                        tagsUsed.add(tag.copy(numberOfUses = -1))
+                    else {
+                        for (it in tagsUsed) {
+                            if (it.name == tag.name) {
+                                it.numberOfUses -= 1
+                                break
+                            }
+                            tagsUsed.add(tag.copy(numberOfUses = -1))
+                        }
+                    }
+                }
+            }
+        }
+        return tagsUsed
+    }
+
+    private fun tagUsed(id: String, numberOfUses: Int) {
+        val tag = TagRepository.getTag(id)
+        TagRepository.changeTag(id, tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
     }
 
 }

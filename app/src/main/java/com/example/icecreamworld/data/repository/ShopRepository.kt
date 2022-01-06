@@ -13,22 +13,45 @@ import com.google.firebase.database.ktx.getValue
 
 object ShopRepository: Repository(Handler(RefName.Shops)) {
 
-    fun addShop(shop: Shop) {
-        handler.addValue(shop)
+    fun addShop(shop: Shop, customId: String? = null) {
+        if (shopExists(shop).not()) {
+            if (customId == null) {
+                handler.addValue(shop)
+            }
+            else
+                handler.setValue(customId, shop)
+            TagUses(shop).increase()
+        }
     }
-    fun changeShop(id: String, shop: Shop) {
-        handler.changeValue(id, shop)
+    fun changeShop(id: String, changedShop: Shop) {
+        getShop(id)?.let {
+            if (it == changedShop)
+                return
+            handler.changeValue(id, changedShop)
+            TagUses(changedShop, it).increase()
+        }
     }
     fun deleteShop(id: String) {
-        handler.deleteValue(id)
+        getShop(id)?.let {
+            TagUses(it).decrease()
+            handler.deleteValue(id)
+        }
     }
 
-    fun getShop(id: String): Shop {
+    fun getShop(id: String): Shop? {
         data.value.forEach {
             if (it.key!! == id)
                 return it.getValue<Shop>() as Shop
         }
-        return Shop()
+        return null
+    }
+
+    private fun shopExists(shop: Shop): Boolean {
+        data.value.forEach {
+            if (shop == it.getValue<Shop>() as Shop)
+                return true
+        }
+        return false
     }
 
     fun listenToChanges() {
@@ -60,7 +83,7 @@ object ShopRepository: Repository(Handler(RefName.Shops)) {
 class MenuManager(data: DataSnapshot) {
 
     private val id: String? = data.key
-    private val shop: Shop = ShopRepository.getShop(id!!)
+    private val shop: Shop = ShopRepository.getShop(id!!)!!
 
     fun addProduct(product: Product) {
         shop.menu.add(product)
