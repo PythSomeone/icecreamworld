@@ -77,10 +77,13 @@ fun NavigationPage(location: Task<Location>) {
             composable("AddShopScreen") {
                 AddShopScreen(navController)
             }
-            composable("EditShopScreen") {
-                EditShopScreen(navController)
+            composable("EditShop/{ShopId}") { backstackEntry ->
+                EditShopScreen(
+                    navController,
+                    backstackEntry.arguments?.getString("ShopId"),
+                )
             }
-            composable("ShopScreen/{ShopId}") { backstackEntry ->
+            composable("Shop/{ShopId}") { backstackEntry ->
                 ShopScreen(
                     navController,
                     backstackEntry.arguments?.getString("ShopId"),

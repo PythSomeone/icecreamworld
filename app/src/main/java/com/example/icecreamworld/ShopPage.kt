@@ -1,25 +1,19 @@
 package com.example.icecreamworld
 
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -30,12 +24,6 @@ import com.example.icecreamworld.ui.theme.BackgroundCardColor
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
 import com.example.icecreamworld.ui.theme.OutlineBrown
-import androidx.core.content.ContextCompat.startActivity
-
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 
 
 @ExperimentalFoundationApi
@@ -44,15 +32,8 @@ fun ShopScreen(
     navController: NavHostController,
     shopId: String?
 ) {
-    var value = remember { mutableStateOf(TextFieldValue("")) }
-    val view = LocalView.current
-//    val product1 = Product(name = "IceCream", price = 1.0f)
-//    val product2 = Product(name = "Sweet", price = 2.0f)
-//    val menu = ArrayList<Product>()
-//    menu.add(product1)
-//    menu.add(product2)
+
     val shop = ShopRepository.getShop(shopId!!)
-    Log.d("shop", shop.toString())
     val scrollState = rememberScrollState()
     var url = shop.websiteLink
     if (!shop.websiteLink?.startsWith("http://")!! && !shop.websiteLink?.startsWith("https://"))
@@ -68,6 +49,7 @@ fun ShopScreen(
         Column(
             Modifier
                 .verticalScroll(state = scrollState)
+                .padding(horizontal = 30.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -114,7 +96,6 @@ fun ShopScreen(
             )
             Card(
                 modifier = Modifier
-                    .padding(10.dp)
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 shape = MaterialTheme.shapes.medium,
@@ -143,33 +124,70 @@ fun ShopScreen(
                         }
                     }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth(),
             ) {
+                if(!shop.location.isNullOrEmpty()) {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate("MapPage")
+                        },
+                        backgroundColor = CanvasBrown,
+                        contentColor = Color.White,
+                        modifier = Modifier
+                            .height(30.dp)
+                            .width(120.dp)
+                    )
+                    {
+                        Text("See on map")
+                    }
+                }
+                if(!shop.websiteLink.isNullOrEmpty()) {
+                    FloatingActionButton(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = Uri.parse(url)
+                            context.startActivity(intent)
+                        },
+                        backgroundColor = CanvasBrown,
+                        contentColor = Color.White,
+                        modifier = Modifier
+                            .height(30.dp)
+                            .width(120.dp)
+                    )
+                    {
+                        Text("Website")
+                    }
 
-                FloatingActionButton(onClick = { navController.navigate("MapPage") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
-                    .height(30.dp)
-                    .width(120.dp)) {
-                    Text("See on map")
                 }
-                FloatingActionButton(onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(url)
-                        context.startActivity(intent)
-                                               },
-                    backgroundColor = CanvasBrown,
-                    contentColor = Color.White,
-                    modifier = Modifier
-                        .height(30.dp)
-                        .width(120.dp))
-                {
-                    Text("Website")
-                }
+
 
             }
 
+            if(!shop.location.isNullOrEmpty() || !shop.websiteLink.isNullOrEmpty()){
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("EditShop/${shopId}")
+                },
+                backgroundColor = CanvasBrown,
+                contentColor = Color.White,
+                modifier = Modifier
+                    .height(30.dp)
+                    .width(120.dp)
+            )
+            {
+                Text("Edit shop")
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
+
 
         }
 

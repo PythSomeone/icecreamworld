@@ -31,11 +31,8 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "The nearest ice cream shop"
-
     val shops = ShopRepository
-    shops.data.value.forEach{
-        shops.getShop(it.key!!)
-    }
+
 
     Box(
         Modifier

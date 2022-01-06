@@ -1,6 +1,5 @@
 package com.example.icecreamworld.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -65,7 +64,7 @@ fun ShopsCard(
                     color = CanvasBrown
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                FloatingActionButton(onClick = { navController.navigate("ShopScreen/${key}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
+                FloatingActionButton(onClick = { navController.navigate("Shop/${key}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
                     .height(30.dp)
                     .width(150.dp)) {
                     Text("See More")

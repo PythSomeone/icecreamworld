@@ -26,7 +26,6 @@ fun ShopText(
 ) {
     Column (
     modifier = Modifier
-        .padding(horizontal = 20.dp)
         .fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally,
     content = {
