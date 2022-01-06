@@ -37,22 +37,6 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
         shops.getShop(it.key!!)
     }
 
-
-    val shopList = listOf(
-        Shop(
-            "gjo",
-            "dsafas",
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
-        ),
-        Shop(
-            "abc",
-            "def",
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
-        )
-    )
-
-
-
     Box(
         Modifier
             .fillMaxSize()

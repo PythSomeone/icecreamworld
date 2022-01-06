@@ -28,13 +28,7 @@ fun ShopsCard(
     image: String,
     key: String,
 ) {
-    val shop = Shop(
-        "123",
-        "abc",
-        "def",
-        "Wrocław, Legnicka 7"
-    )
-    Log.d("TAG", key.toString())
+
     Card(
         modifier = Modifier
             .padding(10.dp)
