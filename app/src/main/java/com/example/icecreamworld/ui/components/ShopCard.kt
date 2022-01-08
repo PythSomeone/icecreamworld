@@ -15,7 +15,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.icecreamworld.R
-import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.theme.CanvasBrown
 
 
@@ -52,7 +51,8 @@ fun ShopsCard(
                 Modifier
                     .padding(8.dp)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.h4,
@@ -64,9 +64,14 @@ fun ShopsCard(
                     color = CanvasBrown
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                FloatingActionButton(onClick = { navController.navigate("Shop/${key}") }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
-                    .height(30.dp)
-                    .width(150.dp)) {
+                FloatingActionButton(
+                    onClick = { navController.navigate("Shop/${key}") },
+                    backgroundColor = CanvasBrown,
+                    contentColor = Color.White,
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(150.dp)
+                ) {
                     Text("See More")
                 }
             }

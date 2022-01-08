@@ -2,8 +2,8 @@ package com.example.icecreamworld.data.repository
 
 import android.content.ContentValues
 import android.util.Log
-import com.example.icecreamworld.data.Handler
 import com.example.icecreamworld.data.Folder
+import com.example.icecreamworld.data.Handler
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.Tag
 import com.google.firebase.database.ChildEventListener
@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
 
 
-object TagRepository: Repository(Handler(Folder.Tags)) {
+object TagRepository : Repository(Handler(Folder.Tags)) {
 
     fun addTag(tag: Tag) {
         data.value.forEach {
@@ -20,11 +20,14 @@ object TagRepository: Repository(Handler(Folder.Tags)) {
                 return
         }
         handler.addValue(
-            tag.copy(name = tag.name!!.capitalize()))
+            tag.copy(name = tag.name!!.capitalize())
+        )
     }
+
     fun changeTag(id: String, tag: Tag) {
         handler.changeValue(id, tag)
     }
+
     fun deleteTag(id: String) {
         handler.deleteValue(id)
     }
@@ -49,7 +52,7 @@ object TagRepository: Repository(Handler(Folder.Tags)) {
         handler.initializeListener(Listener)
     }
 
-    private object Listener: ChildEventListener {
+    private object Listener : ChildEventListener {
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             addData(snapshot)
             Log.d(ContentValues.TAG, "$snapshot was added to local repository")
@@ -73,7 +76,8 @@ object TagRepository: Repository(Handler(Folder.Tags)) {
 
 class TagUses(
     private val shop: Shop,
-    private val previousShop: Shop? = null) {
+    private val previousShop: Shop? = null
+) {
 
     private val usedTags = countTagsUsed()
 
@@ -82,11 +86,13 @@ class TagUses(
             tagUsed(TagRepository.getId(it.name!!), it.numberOfUses)
         }
     }
+
     fun decrease() {
         usedTags.forEach {
             tagUsed(TagRepository.getId(it.name!!), -it.numberOfUses)
         }
     }
+
     private fun countTagsUsed(): MutableList<Tag> {
         val tagsUsed = mutableListOf<Tag>()
 

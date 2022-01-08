@@ -56,8 +56,7 @@ fun SearchSection(
                 .onFocusChanged { onFocusChanged(it) }
                 .align(Alignment.CenterVertically),
             value = textValue.value,
-            onValueChange = {
-                    value ->
+            onValueChange = { value ->
                 textValue.value = value
                 state = true
             },
@@ -80,12 +79,15 @@ fun SearchSection(
             ),
             shape = RoundedCornerShape(100f),
         )
-        FloatingActionButton(onClick = { navController.navigate("MapPage") },backgroundColor = CanvasBrown, shape = RoundedCornerShape(15.dp)) {
+        FloatingActionButton(
+            onClick = { navController.navigate("MapPage") },
+            backgroundColor = CanvasBrown,
+            shape = RoundedCornerShape(15.dp)
+        ) {
             Icon(imageVector = Icons.Outlined.LocationOn, contentDescription = "Map")
         }
     }
-    if (state)
-    {
+    if (state) {
         ShopListInSearch(state = textValue)
     }
 }
@@ -101,7 +103,12 @@ fun ShopListItem(nameText: String, onItemClick: (String) -> Unit) {
             .padding(PaddingValues(8.dp, 16.dp))
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = nameText, fontSize = 18.sp, color = CanvasBrown, textAlign = TextAlign.Center)
+            Text(
+                text = nameText,
+                fontSize = 18.sp,
+                color = CanvasBrown,
+                textAlign = TextAlign.Center
+            )
             Divider(color = CanvasBrown)
         }
 
@@ -109,15 +116,25 @@ fun ShopListItem(nameText: String, onItemClick: (String) -> Unit) {
 }
 
 @Composable
-fun ShopListInSearch(state: MutableState<TextFieldValue>){
+fun ShopListInSearch(state: MutableState<TextFieldValue>) {
     val shopList = arrayListOf(
-        Shop("gjo","dsafas","https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"),
-        Shop("abc","def","https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD")
+        Shop(
+            "gjo",
+            "dsafas",
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
+        ),
+        Shop(
+            "abc",
+            "def",
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
+        )
     )
     var filteredShops: ArrayList<Shop>
-    LazyColumn(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 50.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 50.dp)
+    ) {
         filteredShops = if (state.value.text.isEmpty()) {
             shopList
         } else {
@@ -126,8 +143,10 @@ fun ShopListInSearch(state: MutableState<TextFieldValue>){
                 if (shop.name!!.lowercase(Locale.getDefault())
                         .contains(state.value.text.lowercase(Locale.getDefault()))
                     || shop.description!!.lowercase(Locale.getDefault())
-                        .contains(state.value.text.lowercase(Locale.getDefault())
-                        )) {
+                        .contains(
+                            state.value.text.lowercase(Locale.getDefault())
+                        )
+                ) {
                     resultList.add(shop)
                 }
             }
