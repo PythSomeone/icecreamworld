@@ -1,31 +1,29 @@
 package com.example.icecreamworld.data
 
 import android.content.ContentValues
+import android.net.Uri
 import android.util.Log
+import com.example.icecreamworld.data.handler.StorageHandler
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-enum class RefName {
+enum class Folder {
     Shops,
     ShopForms,
     Tags
 }
 
-class Handler(refName: RefName) {
+class Handler(private val folder: Folder) {
 
     private val database = Firebase.database
-    private val ref = database.getReference(refName.name)
+    private val ref = database.getReference(folder.name)
 
-    fun addValue(obj: Any) {
-        ref.push()
-            .setValue(obj)
-            .addOnSuccessListener {
-                Log.d(ContentValues.TAG, "Successfully added $obj to database")
-            }
-            .addOnFailureListener {
-                Log.d(ContentValues.TAG, "Something went wrong setting $obj to database", it)
-            }
+    fun addValue(obj: Any): String {
+        val refKey = ref.push().key
+        if (refKey != null)
+            setValue(refKey, obj)
+        return refKey!!
     }
 
     fun setValue(id: String, obj: Any) {
