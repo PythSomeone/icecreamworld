@@ -28,8 +28,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun GoogleMaps(currentLocation: Location) {
     val mapView = rememberMapViewWithLifeCycle()
-    val latlng= remember {   mutableStateOf("lat : ${currentLocation.latitude},lang: ${currentLocation.longitude}")}
-    Box(){
+    val latlng =
+        remember { mutableStateOf("lat : ${currentLocation.latitude},lang: ${currentLocation.longitude}") }
+    Box() {
 
         Column(
             modifier = Modifier
@@ -37,20 +38,22 @@ fun GoogleMaps(currentLocation: Location) {
                 .background(Color.White)
         ) {
             AndroidView(
-                {mapView}
+                { mapView }
             ) { mapView ->
                 CoroutineScope(Dispatchers.Main).launch {
                     mapView.getMapAsync {
-                        it.mapType=1
+                        it.mapType = 1
                         it.uiSettings.isZoomControlsEnabled = true
-                        val currentLatLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+                        val currentLatLng =
+                            LatLng(currentLocation.latitude, currentLocation.longitude)
                         it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
                         it.setOnCameraIdleListener {
                             it.clear()
                             it.addMarker(
                                 MarkerOptions()
-                                .position(currentLatLng))
-                            latlng.value=("lat: ${it.getCameraPosition().target.latitude}," +
+                                    .position(currentLatLng)
+                            )
+                            latlng.value = ("lat: ${it.getCameraPosition().target.latitude}," +
                                     " lang: ${it.getCameraPosition().target.longitude}")
                         }
                     }
@@ -85,7 +88,7 @@ fun rememberMapViewWithLifeCycle(): MapView {
 fun rememberMapLifecycleObserver(mapView: MapView): LifecycleEventObserver =
     remember(mapView) {
         LifecycleEventObserver { _, event ->
-            when(event) {
+            when (event) {
                 Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
                 Lifecycle.Event.ON_START -> mapView.onStart()
                 Lifecycle.Event.ON_RESUME -> mapView.onResume()

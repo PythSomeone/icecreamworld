@@ -3,8 +3,6 @@ package com.example.icecreamworld
 import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +19,6 @@ import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.appbar.TopAppBar
 import com.example.icecreamworld.ui.components.GoogleMaps
 import com.example.icecreamworld.ui.components.SearchSection
-import com.example.icecreamworld.ui.components.ShopsCard
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
 import com.google.android.gms.tasks.Task
@@ -80,7 +77,7 @@ fun MapScreen(openDrawer: () -> Unit, navController: NavHostController, location
             )
             Spacer(modifier = Modifier.height(20.dp))
             Column(modifier = Modifier.fillMaxHeight()) {
-                Box(modifier = Modifier.weight(1f)){
+                Box(modifier = Modifier.weight(1f)) {
                     GoogleMaps(currentLocation = currentLocation)
                 }
 //                LazyColumn(

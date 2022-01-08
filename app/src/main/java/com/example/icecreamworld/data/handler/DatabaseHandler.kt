@@ -1,9 +1,7 @@
 package com.example.icecreamworld.data
 
 import android.content.ContentValues
-import android.net.Uri
 import android.util.Log
-import com.example.icecreamworld.data.handler.StorageHandler
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -46,7 +44,11 @@ class Handler(private val folder: Folder) {
                     Log.d(ContentValues.TAG, "There is no $id in database!")
             }
             .addOnFailureListener {
-                Log.d(ContentValues.TAG, "Something went wrong during changing $obj in database", it)
+                Log.d(
+                    ContentValues.TAG,
+                    "Something went wrong during changing $obj in database",
+                    it
+                )
             }
     }
 

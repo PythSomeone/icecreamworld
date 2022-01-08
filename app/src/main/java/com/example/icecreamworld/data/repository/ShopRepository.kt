@@ -3,8 +3,8 @@ package com.example.icecreamworld.data.repository
 import android.content.ContentValues
 import android.net.Uri
 import android.util.Log
-import com.example.icecreamworld.data.Handler
 import com.example.icecreamworld.data.Folder
+import com.example.icecreamworld.data.Handler
 import com.example.icecreamworld.data.handler.StorageHandler
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.ShopForm
@@ -13,7 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
 
-object ShopRepository: Repository(Handler(Folder.Shops)) {
+object ShopRepository : Repository(Handler(Folder.Shops)) {
 
     internal fun addShop(shop: Shop) {
         if (shopExists(shop).not()) {
@@ -21,6 +21,7 @@ object ShopRepository: Repository(Handler(Folder.Shops)) {
             TagUses(shop).increase()
         }
     }
+
     internal fun changeShop(id: String, changedShop: Shop) {
         getShop(id)?.let {
             if (it == changedShop)
@@ -29,6 +30,7 @@ object ShopRepository: Repository(Handler(Folder.Shops)) {
             TagUses(changedShop, it).increase()
         }
     }
+
     fun deleteShop(id: String) {
         getShop(id)?.let {
             TagUses(it).decrease()
@@ -57,7 +59,7 @@ object ShopRepository: Repository(Handler(Folder.Shops)) {
         handler.initializeListener(Listener)
     }
 
-    private object Listener: ChildEventListener {
+    private object Listener : ChildEventListener {
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             addData(snapshot)
             Log.d(ContentValues.TAG, "$snapshot was added to local repository")
@@ -79,7 +81,7 @@ object ShopRepository: Repository(Handler(Folder.Shops)) {
 
 }
 
-object ShopFormRepository: Repository(Handler(Folder.ShopForms)) {
+object ShopFormRepository : Repository(Handler(Folder.ShopForms)) {
 
     suspend fun addShopForm(shopForm: ShopForm, uri: Uri? = null) {
         val id: String = handler.addValue(shopForm)
@@ -91,6 +93,7 @@ object ShopFormRepository: Repository(Handler(Folder.ShopForms)) {
             )
         }
     }
+
     fun approveShopForm(id: String) {
         val shopForm = getShopForm(id) ?: return
         if (shopForm.shop == null) return
@@ -100,12 +103,12 @@ object ShopFormRepository: Repository(Handler(Folder.ShopForms)) {
             if (shopForm.shop.image != shopToChange!!.image)
                 StorageHandler.removePicture(shopToChange.image!!)
             ShopRepository.changeShop(shopForm.toChange, shopForm.shop)
-        }
-        else
+        } else
             ShopRepository.addShop(shopForm.shop)
 
         handler.deleteValue(id)
     }
+
     fun rejectShopForm(id: String) {
         val shopForm = getShopForm(id) ?: return
 
@@ -141,7 +144,7 @@ object ShopFormRepository: Repository(Handler(Folder.ShopForms)) {
         handler.initializeListener(Listener)
     }
 
-    private object Listener: ChildEventListener {
+    private object Listener : ChildEventListener {
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
             addData(snapshot)
             Log.d(ContentValues.TAG, "$snapshot was added to local repository")

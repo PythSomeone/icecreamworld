@@ -11,10 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.*
-import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.components.Drawer
 import com.example.icecreamworld.ui.components.DrawerScreens
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -44,7 +45,7 @@ fun NavigationPage(location: Task<Location>) {
                 }
             )
         }
-    ){
+    ) {
         NavHost(
             navController = navController,
             startDestination = "HomePage"
@@ -54,7 +55,7 @@ fun NavigationPage(location: Task<Location>) {
             }
             composable(DrawerScreens.Proposed.route) {
                 //Sample Usage of drawer. Inside function simply use TopAppBar with "onButtonClicked = { openDrawer() }"
-                ProposedScreen ( openDrawer = {openDrawer()}, navController)
+                ProposedScreen(openDrawer = { openDrawer() }, navController)
             }
             composable(DrawerScreens.Search.route) {
 
@@ -66,13 +67,14 @@ fun NavigationPage(location: Task<Location>) {
 
             }
             composable(DrawerScreens.NewIceCreamShop.route) {
-
+                AddShopScreen(navController)
             }
             composable(DrawerScreens.NewMenu.route) {
 
             }
             composable(DrawerScreens.Logout.route) {
-
+                Firebase.auth.signOut()
+                HomeScreen(navController)
             }
             composable("AddShopScreen") {
                 AddShopScreen(navController)
@@ -88,6 +90,9 @@ fun NavigationPage(location: Task<Location>) {
                     navController,
                     backstackEntry.arguments?.getString("ShopId"),
                 )
+            }
+            composable("LoginPage") {
+                LoginScreen(navController)
             }
         }
     }
