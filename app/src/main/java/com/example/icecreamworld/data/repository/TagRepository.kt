@@ -3,7 +3,7 @@ package com.example.icecreamworld.data.repository
 import android.content.ContentValues
 import android.util.Log
 import com.example.icecreamworld.data.Handler
-import com.example.icecreamworld.data.RefName
+import com.example.icecreamworld.data.Folder
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.Tag
 import com.google.firebase.database.ChildEventListener
@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
 
 
-object TagRepository: Repository(Handler(RefName.Tags)) {
+object TagRepository: Repository(Handler(Folder.Tags)) {
 
     fun addTag(tag: Tag) {
         data.value.forEach {

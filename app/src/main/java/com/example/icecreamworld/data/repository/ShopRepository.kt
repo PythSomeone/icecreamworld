@@ -1,40 +1,27 @@
 package com.example.icecreamworld.data.repository
 
 import android.content.ContentValues
+import android.net.Uri
 import android.util.Log
 import com.example.icecreamworld.data.Handler
-import com.example.icecreamworld.data.RefName
+import com.example.icecreamworld.data.Folder
+import com.example.icecreamworld.data.handler.StorageHandler
 import com.example.icecreamworld.model.Shop
+import com.example.icecreamworld.model.ShopForm
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
 
-object ShopRepository: Repository(Handler(RefName.Shops)) {
+object ShopRepository: Repository(Handler(Folder.Shops)) {
 
-    fun approveShop(formId: String, customShopId: String? = null) {
-        val shopForm = ShopFormRepository.getShopForm(formId) ?: return
-        if (shopForm.shop == null)
-            return
-        if (shopForm.toChange != null) {
-            changeShop(shopForm.toChange, shopForm.shop)
-        }
-        else {
-            addShop(shopForm.shop)
-        }
-        ShopFormRepository.deleteShopForm(formId)
-    }
-    private fun addShop(shop: Shop, customId: String? = null) {
+    internal fun addShop(shop: Shop) {
         if (shopExists(shop).not()) {
-            if (customId == null) {
-                handler.addValue(shop)
-            }
-            else
-                handler.setValue(customId, shop)
+            handler.addValue(shop)
             TagUses(shop).increase()
         }
     }
-    private fun changeShop(id: String, changedShop: Shop) {
+    internal fun changeShop(id: String, changedShop: Shop) {
         getShop(id)?.let {
             if (it == changedShop)
                 return
@@ -46,6 +33,7 @@ object ShopRepository: Repository(Handler(RefName.Shops)) {
         getShop(id)?.let {
             TagUses(it).decrease()
             handler.deleteValue(id)
+            StorageHandler.removePicture(it.image!!)
         }
     }
 
@@ -91,38 +79,88 @@ object ShopRepository: Repository(Handler(RefName.Shops)) {
 
 }
 
-//class MenuManager(data: DataSnapshot) {
-//
-//    private val id: String? = data.key
-//    private val shop: Shop = ShopRepository.getShop(id!!)!!
-//
-//    fun addProduct(product: Product) {
-//        shop.menu.add(product)
-//        ShopRepository.approveShop(id!!, shop)
-//    }
-//    fun updateProduct(index: Int, updatedProduct: Product) {
-//        if (recordExists(index)) {
-//            shop.menu[index] = updatedProduct
-//            ShopRepository.approveShop(id!!, shop)
-//        }
-//    }
-//    fun removeProduct(index: Int) {
-//        if (recordExists(index)) {
-//            shop.menu.removeAt(index)
-//            ShopRepository.approveShop(id!!, shop)
-//        }
-//    }
-//    fun clear() {
-//        shop.menu.clear()
-//        ShopRepository.approveShop(id!!, shop)
-//    }
-//
-//    private fun recordExists(index: Int): Boolean {
-//        if (shop.menu.isEmpty() || shop.menu.size <= index)
-//            return false
-//        return true
-//    }
-//
-//}
+object ShopFormRepository: Repository(Handler(Folder.ShopForms)) {
+
+    suspend fun addShopForm(shopForm: ShopForm, uri: Uri? = null) {
+        val id: String = handler.addValue(shopForm)
+        if (uri != null) {
+            setPicture(
+                uri = uri,
+                id = id,
+                shopForm = shopForm
+            )
+        }
+    }
+    fun approveShopForm(id: String) {
+        val shopForm = getShopForm(id) ?: return
+        if (shopForm.shop == null) return
+
+        if (shopForm.toChange != null) {
+            val shopToChange = ShopRepository.getShop(shopForm.toChange)
+            if (shopForm.shop.image != shopToChange!!.image)
+                StorageHandler.removePicture(shopToChange.image!!)
+            ShopRepository.changeShop(shopForm.toChange, shopForm.shop)
+        }
+        else
+            ShopRepository.addShop(shopForm.shop)
+
+        handler.deleteValue(id)
+    }
+    fun rejectShopForm(id: String) {
+        val shopForm = getShopForm(id) ?: return
+
+        StorageHandler.removePicture(shopForm.shop!!.image!!)
+        handler.deleteValue(id)
+    }
+
+    fun getShopForm(id: String): ShopForm? {
+        data.value.forEach {
+            if (it.key!! == id)
+                return it.getValue<ShopForm>() as ShopForm
+        }
+        return null
+    }
+
+    private suspend fun setPicture(uri: Uri, id: String, shopForm: ShopForm) {
+        handler.changeValue(
+            id = id,
+            obj = shopForm.copy(
+                shop = shopForm.shop!!.copy(
+                    image =
+                    StorageHandler.uploadPicture(
+                        uri = uri,
+                        folder = Folder.Shops,
+                        dataId = id
+                    )
+                )
+            )
+        )
+    }
+
+    fun listenToChanges() {
+        handler.initializeListener(Listener)
+    }
+
+    private object Listener: ChildEventListener {
+        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+            addData(snapshot)
+            Log.d(ContentValues.TAG, "$snapshot was added to local repository")
+        }
+
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            changeData(snapshot)
+            Log.d(ContentValues.TAG, "$snapshot was changed in local repository")
+        }
+
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            removeData(snapshot)
+            Log.d(ContentValues.TAG, "$snapshot was removed from local repository")
+        }
+
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+        override fun onCancelled(error: DatabaseError) {}
+    }
+
+}
 
 
