@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -18,6 +19,14 @@ import com.example.icecreamworld.ui.theme.IceCreamWorldTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
+private var listenersInitialized = false
+private fun initializeListeners() {
+    ShopRepository.listenToChanges()
+    ShopFormRepository.listenToChanges()
+    TagRepository.listenToChanges()
+    Log.d("Listeners", "Listeners initialized")
+    listenersInitialized = true
+}
 
 class MainActivity : ComponentActivity() {
 //    private val authViewModel: AuthViewModel by viewModels()
@@ -30,9 +39,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         super.onCreate(savedInstanceState)
-        ShopRepository.listenToChanges()
-        ShopFormRepository.listenToChanges()
-        TagRepository.listenToChanges()
+        if (listenersInitialized.not())
+            initializeListeners()
         try {
             if (ContextCompat.checkSelfPermission(
                     applicationContext,
