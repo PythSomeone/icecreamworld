@@ -12,7 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,8 +50,6 @@ fun EditShopSection(
     if(shopId!=null) {
         shop = ShopRepository.getShop(shopId!!)!!
     }
-
-
     var description = remember { mutableStateOf(shop?.description) }
     var name = remember { mutableStateOf(shop?.name) }
     var location = remember { mutableStateOf(shop?.location) }
@@ -68,12 +68,15 @@ fun EditShopSection(
         imageUri = uri
     }
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp)
+                .verticalScroll(state = scrollState)
         ) {
 
             Spacer(modifier = Modifier.width(16.dp))
