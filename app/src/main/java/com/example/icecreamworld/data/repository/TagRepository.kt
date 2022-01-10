@@ -32,20 +32,20 @@ object TagRepository : Repository(Handler(Folder.Tags)) {
         handler.deleteValue(id)
     }
 
-    fun getTag(id: String): Tag {
+    fun getTag(id: String): Tag? {
         val index = dataIndex(id)
         if (index != null)
             return data.value[index].getValue<Tag>() as Tag
-        return Tag()
+        return null
     }
 
-    fun getId(name: String): String {
+    fun getId(name: String): String? {
         data.value.forEach {
             val tag = it.getValue<Tag>() as Tag
             if (tag.name == name)
-                return it.key!!
+                return it.key
         }
-        return ""
+        return null
     }
 
     fun listenToChanges() {
@@ -83,13 +83,13 @@ class TagUses(
 
     fun increase() {
         usedTags.forEach {
-            tagUsed(TagRepository.getId(it.name!!), it.numberOfUses)
+            tagUsed(it, it.numberOfUses)
         }
     }
 
     fun decrease() {
         usedTags.forEach {
-            tagUsed(TagRepository.getId(it.name!!), -it.numberOfUses)
+            tagUsed(it, -it.numberOfUses)
         }
     }
 
@@ -131,9 +131,15 @@ class TagUses(
         return tagsUsed
     }
 
-    private fun tagUsed(id: String, numberOfUses: Int) {
-        val tag = TagRepository.getTag(id)
-        TagRepository.changeTag(id, tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
+    private fun tagUsed(tag: Tag, numberOfUses: Int) {
+        if (tag.name == null)
+            return
+        val tagId = TagRepository.getId(tag.name)
+
+        if (tagId == null)
+            TagRepository.addTag(tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
+        else
+            TagRepository.changeTag(tagId, tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
     }
 
 }
