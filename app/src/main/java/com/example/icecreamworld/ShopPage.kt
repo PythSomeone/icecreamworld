@@ -174,7 +174,7 @@ fun ShopScreen(
 
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("EditShop/${shopId}")
+                    navController.navigate("ShopForm/${shopId}")
                 },
                 backgroundColor = CanvasBrown,
                 contentColor = Color.White,

@@ -9,13 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.icecreamworld.model.Shop
-import com.example.icecreamworld.ui.components.EditShopSection
+import com.example.icecreamworld.ui.components.ShopFormSection
 import kotlinx.coroutines.delay
 
 @ExperimentalFoundationApi
 @Composable
-fun EditShopScreen(
+fun ShopFormScreen(
     navController: NavController,
     shopId: String? = null,
 ) {
@@ -23,7 +22,7 @@ fun EditShopScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(4.dp))
-        EditShopSection(shopId, navController)
+        ShopFormSection(shopId, navController)
         Spacer(modifier = Modifier.height(25.dp))
         //refresh
         LaunchedEffect(refreshing) {

@@ -30,7 +30,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.icecreamworld.data.repository.ShopRepository
+import com.example.icecreamworld.model.Product
 import com.example.icecreamworld.model.Shop
+import com.example.icecreamworld.model.Tag
 import com.example.icecreamworld.ui.outlinedtextfields.InputTextField
 import com.example.icecreamworld.ui.theme.ButtonBrown
 import com.example.icecreamworld.ui.theme.OutlineBrown
@@ -39,7 +41,7 @@ import com.example.icecreamworld.viewmodel.ShopViewModel
 
 @ExperimentalFoundationApi
 @Composable
-fun EditShopSection(
+fun ShopFormSection(
     shopId: String?=null,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -54,6 +56,10 @@ fun EditShopSection(
     var name = remember { mutableStateOf(shop?.name) }
     var location = remember { mutableStateOf(shop?.location) }
     var websiteLink = remember { mutableStateOf(shop?.websiteLink) }
+
+    var tagList = mutableListOf<Tag>(Tag("Shiet"))
+    var menu = remember { mutableStateOf(shop?.menu) }
+
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -174,21 +180,39 @@ fun EditShopSection(
 
                 Button(
                     onClick = {
+                        /*TODO*/
+                    },
+                    shape = RoundedCornerShape(6.dp),
+                    modifier = Modifier
+                        .width(200.dp),
+                    content = {
+                        Text(
+                            text = "Change menu",
+                            color = Color.White
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                )
+
+                Spacer(Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
                         Toast.makeText(
                             context,
                             "Changes submitted...",
                             Toast.LENGTH_SHORT
                         ).show()
+
                         val shopToSubmit = Shop(
                             name=name.value,
                             description = description.value,
                             location = location.value,
-                            websiteLink = websiteLink.value
+                            websiteLink = websiteLink.value,
+                            menu = menu.value
                         )
 
                         viewModel.sendForm(shop = shopToSubmit, toChange = shopId, uri = imageUri)
-
-
 
                         if(shopId!=null) {
                             navController.navigate("Shop/${shopId}")

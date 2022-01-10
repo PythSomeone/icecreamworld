@@ -67,7 +67,7 @@ fun NavigationPage(location: Task<Location>) {
 
             }
             composable(DrawerScreens.NewIceCreamShop.route) {
-                AddShopScreen(navController)
+                ShopFormScreen(navController)
             }
             composable(DrawerScreens.NewMenu.route) {
 
@@ -76,11 +76,8 @@ fun NavigationPage(location: Task<Location>) {
                 Firebase.auth.signOut()
                 HomeScreen(navController)
             }
-            composable("AddShopScreen") {
-                AddShopScreen(navController)
-            }
-            composable("EditShop/{ShopId}") { backstackEntry ->
-                EditShopScreen(
+            composable("ShopForm/{ShopId}") { backstackEntry ->
+                ShopFormScreen(
                     navController,
                     backstackEntry.arguments?.getString("ShopId"),
                 )
