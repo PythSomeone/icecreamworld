@@ -1,12 +1,11 @@
 package com.example.icecreamworld.viewmodel
 
 
+//import com.example.icecreamworld.utils.LoadingState
+//import com.example.icecreamworld.utils.database.ShopHandler
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.example.icecreamworld.utils.LoadingState
-//import com.example.icecreamworld.utils.database.ShopHandler
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class ShopViewModel : ViewModel() {

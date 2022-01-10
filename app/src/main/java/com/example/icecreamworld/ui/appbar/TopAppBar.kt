@@ -14,7 +14,7 @@ import com.example.icecreamworld.ui.theme.BackgroundColor
 fun TopAppBar(
     backgroundColor: androidx.compose.ui.graphics.Color,
     modifier: Modifier = Modifier,
-    onButtonClicked:() -> Unit,
+    onButtonClicked: () -> Unit,
     title: String
 ) {
     androidx.compose.material.TopAppBar(

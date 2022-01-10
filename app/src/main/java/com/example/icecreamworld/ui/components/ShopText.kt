@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.theme.CanvasBrown
 
 @ExperimentalFoundationApi
@@ -24,39 +23,39 @@ fun ShopText(
     label: String,
     text: String
 ) {
-    Column (
-    modifier = Modifier
-        .fillMaxWidth(),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    content = {
-        Text(
-            label,
-            modifier = Modifier
-                .padding()
-                .fillMaxWidth(),
-            color = CanvasBrown,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Card(
-            modifier = Modifier
-                .padding()
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            shape = MaterialTheme.shapes.medium,
-            elevation = 15.dp,
-            backgroundColor = MaterialTheme.colors.surface
-        ) {
-
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = {
             Text(
+                label,
                 modifier = Modifier
-                    .padding(10.dp),
-                text = text!!,
-                fontSize = 16.sp,
+                    .padding()
+                    .fillMaxWidth(),
+                color = CanvasBrown,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
             )
+            Card(
+                modifier = Modifier
+                    .padding()
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.medium,
+                elevation = 15.dp,
+                backgroundColor = MaterialTheme.colors.surface
+            ) {
 
+                Text(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    text = text!!,
+                    fontSize = 16.sp,
+                )
+
+            }
         }
-    }
 
 
     )

@@ -78,7 +78,8 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                         snapshot.getValue<Shop>()?.name!!,
                         snapshot.getValue<Shop>()?.description!!,
                         snapshot.getValue<Shop>()?.image!!,
-                        snapshot.key!!)
+                        snapshot.key!!
+                    )
                 }
             }
         }

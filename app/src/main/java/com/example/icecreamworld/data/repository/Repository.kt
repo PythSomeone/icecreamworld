@@ -16,20 +16,22 @@ open class Repository(protected val handler: Handler) {
             _data.component1().add(snapshot)
         }
     }
+
     protected fun changeData(snapshot: DataSnapshot) {
         snapshot.key?.let { dataIndex(it) }
             .run {
                 if (this != null)
                     _data.component1().set(this, snapshot)
-                else Log.d("Repository","There is no data with this key, ${snapshot.key}")
+                else Log.d("Repository", "There is no data with this key, ${snapshot.key}")
             }
     }
+
     protected fun removeData(snapshot: DataSnapshot) {
         snapshot.key?.let { dataIndex(it) }
             .run {
                 if (this != null)
                     _data.component1().removeAt(this)
-                else Log.d("Repository","There is no data with this key, ${snapshot.key}")
+                else Log.d("Repository", "There is no data with this key, ${snapshot.key}")
             }
     }
 

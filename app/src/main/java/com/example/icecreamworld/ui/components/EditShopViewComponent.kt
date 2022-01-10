@@ -1,25 +1,16 @@
 package com.example.icecreamworld.ui.components
 
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.location.Address
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,69 +18,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.icecreamworld.model.Product
+import coil.compose.rememberImagePainter
 import com.example.icecreamworld.model.Shop
-import com.example.icecreamworld.ui.buttons.ChoosePhotoButton
-import com.example.icecreamworld.ui.outlinedtextfields.InputTextField
-import com.example.icecreamworld.ui.outlinedtextfields.ProductNameTextField
-import com.example.icecreamworld.ui.outlinedtextfields.ProductPriceTextField
 import com.example.icecreamworld.ui.theme.ButtonBrown
-import com.example.icecreamworld.ui.theme.CanvasBrown
+import com.example.icecreamworld.ui.theme.OutlineBrown
 import com.example.icecreamworld.viewmodel.ShopViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.Task
 
 
-@ExperimentalFoundationApi
 @Composable
-fun EditShopSection(
+fun EditProfileSection(
     shop: Shop,
     navController: NavController,
-    viewModel: ShopViewModel = viewModel()
+    modifier: Modifier = Modifier,
+    viewModel: ShopViewModel = viewModel(),
+
     ) {
-
-
-//    var product1 = Product("IceCream", 0.5f)
-//    var product2 = Product("Cookie", 2f)
-//    shop.menu.add(product1)
-//    shop.menu.add(product2)
-    shop.name = "IceCreamShop"
-    shop.description = "Description"
-    shop.websiteLink = "google.com"
-    shop.location = "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood%2Fice-cream&psig=AOvVaw0kfgGV00R3I20tf7BTZjKX&ust=1641045126027000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMDV_M-XjvUCFQAAAAAdAAAAABAD"
-    val address = Location(shop.location)
-
-    var description = remember { mutableStateOf(shop.description) }
-    var name = remember { mutableStateOf(shop.name) }
-    var website = remember { mutableStateOf(shop.websiteLink) }
-
-    var test1 = remember { mutableStateOf(shop.websiteLink) }
-    var test2 = remember { mutableStateOf(shop.websiteLink) }
-    var test3 = remember { mutableStateOf(shop.websiteLink) }
-
+    var description by remember { mutableStateOf(shop.description) }
+    var name by remember { mutableStateOf(shop.name) }
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
-    val bitmap =  remember {
+    val bitmap = remember {
         mutableStateOf<Bitmap?>(null)
     }
-    val launcher = rememberLauncherForActivityResult(contract =
-    ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val launcher = rememberLauncherForActivityResult(
+        contract =
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         imageUri = uri
     }
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(state = scrollState)
-    ) {
-
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -98,19 +63,16 @@ fun EditShopSection(
         ) {
 
             Spacer(modifier = Modifier.width(16.dp))
-
         }
 
-
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = {
-
                 EditProfileTextBox()
+
                 Spacer(Modifier.height(20.dp))
-                if((imageUri != null)) {
+                if ((imageUri != null)) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -130,7 +92,7 @@ fun EditShopSection(
                                 bitmap.value?.let { btm ->
                                     ShopImage(
                                         btm,
-                                        modifier = Modifier
+                                        modifier = modifier
                                             .aspectRatio(1f, matchHeightConstraintsFirst = true)
                                             .padding(3.dp)
                                             .height(100.dp)
@@ -139,8 +101,7 @@ fun EditShopSection(
                             }
                         }
                     )
-                }
-                else{
+                } else {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -150,7 +111,7 @@ fun EditShopSection(
                             Image(
                                 painter = rememberImagePainter(shop.image),
                                 contentDescription = null,
-                                modifier = Modifier
+                                modifier = modifier
                                     .aspectRatio(1f, matchHeightConstraintsFirst = true)
                                     .padding(3.dp)
                                     .height(100.dp)
@@ -161,55 +122,105 @@ fun EditShopSection(
 
                 }
 
-                Spacer(Modifier.height(20.dp))
-                ChoosePhotoButton(launcher)
 
                 Spacer(Modifier.height(20.dp))
 
-                InputTextField(label = "Name", name)
-                InputTextField(label = "Description", description)
-                InputTextField(label = "Website", website)
-//                InputTextField(label = "Location", location)
-//                InputTextField(label = "test1", test1)
-//                InputTextField(label = "test2", test2)
-//                InputTextField(label = "test3", test3)
-                Spacer(Modifier.height(20.dp))
-
-                FloatingActionButton(
+                Button(
                     onClick = {
                         launcher.launch("image/*")
                     },
-                    backgroundColor = CanvasBrown,
-                    contentColor = Color.White,
+                    shape = RoundedCornerShape(6.dp),
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(140.dp)) {
-                    Text("Change location")
-                }
+                        .width(200.dp),
+                    content = {
+                        Text(
+                            text = "Choose photo",
+                            color = Color.White
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                )
 
                 Spacer(Modifier.height(20.dp))
 
-//                LazyColumn(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    contentPadding = PaddingValues(16.dp)
-//                ) {
-//                    items(shop.menu) { item ->
-//                        ProductNameTextField(label = "Name", item)
-//                        ProductPriceTextField(label = "Price", item)
-//                    }
-//                }
+                OutlinedTextField(
+                    value = name!!,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = OutlineBrown,
+                        unfocusedBorderColor = OutlineBrown,
+                    ),
+                    shape = RoundedCornerShape(15.dp),
+                    label =
+                    {
+                        Text(
+                            textAlign = TextAlign.Center,
+                            text = "Change name",
+                            fontSize = 15.sp,
+                            color = ButtonBrown,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                FloatingActionButton(
+                    },
+                    onValueChange = {
+                        name = it
+                    },
+                    modifier = Modifier
+                        .width(300.dp)
+                )
+
+
+                OutlinedTextField(
+                    value = description!!,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = OutlineBrown,
+                        unfocusedBorderColor = OutlineBrown,
+                    ),
+                    shape = RoundedCornerShape(15.dp),
+                    label =
+                    {
+                        Text(
+                            textAlign = TextAlign.Center,
+                            text = "Change description",
+                            fontSize = 15.sp,
+                            color = ButtonBrown,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                    },
+                    onValueChange = {
+                        description = it
+                    },
+                    modifier = Modifier
+                        .width(300.dp)
+                )
+
+                Spacer(Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
+                        launcher.launch("image/*")
+                    },
+                    shape = RoundedCornerShape(6.dp),
+                    modifier = Modifier
+                        .width(200.dp),
+                    content = {
+                        Text(
+                            text = "Change location",
+                            color = Color.White
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                )
+
+                Spacer(Modifier.height(20.dp))
+
+                Button(
                     onClick = {
                         Toast.makeText(
                             context,
                             "Changes submitted...",
                             Toast.LENGTH_SHORT
                         ).show()
-                        Log.d(TAG, description.value.toString())
-                        Log.d(TAG, name.value.toString())
-                        Log.d(TAG, imageUri.toString())
-//                        Log.d(TAG, shop.menu.toString())
 //                        val uriExists = imageUri!=null
 //                        if(uriExists) {
 //                            viewModel.changeData(user, description!!, displayName!!, imageUri!!)
@@ -218,42 +229,19 @@ fun EditShopSection(
 //                            viewModel.changeData(user, description!!, displayName!!)
 //                        navController.navigate(NavigationItem.Profile.route)
                     },
-                    backgroundColor = CanvasBrown,
-                    contentColor = Color.White,
+                    shape = RoundedCornerShape(6.dp),
                     modifier = Modifier
-                        .height(30.dp)
-                        .width(140.dp)) {
-                    Text("Save")
-                }
+                        .width(200.dp),
+                    content = {
+                        Text(
+                            text = "Save",
+                            color = Color.White,
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                )
 
 
-
-//                for (product in productList) {
-//                    product
-//                    InputTextField(label = "Name", product)
-//                    InputTextField(label = "Description", description)
-//                }
-
-                Spacer(Modifier.height(20.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-
-                    FloatingActionButton(onClick = { /*TODO*/ }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
-                        .height(30.dp)
-                        .width(140.dp)) {
-                        Text("Delete shop")
-                    }
-                    FloatingActionButton(onClick = { /*TODO*/ }, backgroundColor = CanvasBrown, contentColor = Color.White, modifier = Modifier
-                        .height(30.dp)
-                        .width(140.dp)) {
-                        Text("Edit the menu")
-                    }
-
-                }
-                Spacer(Modifier.height(20.dp))
             }
         )
 

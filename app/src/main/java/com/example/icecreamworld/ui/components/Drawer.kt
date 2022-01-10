@@ -1,8 +1,6 @@
 package com.example.icecreamworld.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -14,18 +12,19 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
 import com.example.icecreamworld.ui.theme.DrawerBackgroundColor
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
-sealed class DrawerScreens(val title: String, val route: String){
+sealed class DrawerScreens(val title: String, val route: String) {
     object Proposed : DrawerScreens("Proposed", "ProposedPage")
     object Search : DrawerScreens("Search", "SearchPage")
-    object Map : DrawerScreens( "Map", "MapPage")
-    object ManagementPanel : DrawerScreens( "Management Panel", "ManagementPage")
-    object NewIceCreamShop : DrawerScreens( "New Ice Cream Shop", "NewIceCreamShopPage")
-    object NewMenu : DrawerScreens( "New Menu", "AddMenuScreen")
-    object Logout: DrawerScreens("Log out", "LogOut")
+    object Map : DrawerScreens("Map", "MapPage")
+    object ManagementPanel : DrawerScreens("Management Panel", "ManagementPage")
+    object NewIceCreamShop : DrawerScreens("New Ice Cream Shop", "NewIceCreamShopPage")
+    object NewMenu : DrawerScreens("New Menu", "AddMenuScreen")
+    object Logout : DrawerScreens("Log out", "LogOut")
 }
 
 private val screensForAdmin = listOf(
@@ -36,6 +35,12 @@ private val screensForAdmin = listOf(
     DrawerScreens.NewIceCreamShop,
     DrawerScreens.NewMenu,
     DrawerScreens.Logout
+)
+private val screensForGuest = listOf(
+    DrawerScreens.Proposed,
+    DrawerScreens.Search,
+    DrawerScreens.Map,
+    DrawerScreens.NewIceCreamShop
 )
 
 @Composable
@@ -51,10 +56,11 @@ fun Drawer(
         verticalArrangement = Arrangement.Top
     ) {
         Spacer(modifier = Modifier.height(50.dp))
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-        ){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
             Text(
                 text = "Menu",
                 style = MaterialTheme.typography.h4,
@@ -64,12 +70,18 @@ fun Drawer(
                 color = CanvasBrown
             )
         }
-        screensForAdmin.forEach { screen ->
+        val screens: List<DrawerScreens> = if (Firebase.auth.currentUser != null) {
+            screensForAdmin
+        } else {
+            screensForGuest
+        }
+        screens.forEach { screen ->
             Spacer(Modifier.height(24.dp))
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-            ){
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
                 Text(
                     text = screen.title,
                     style = MaterialTheme.typography.h6,
@@ -79,9 +91,11 @@ fun Drawer(
                         .clickable { onDestinationClicked(screen.route) },
                     color = CanvasBrown
                 )
-                Divider(thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 50.dp),
-                color = CanvasBrown)
+                Divider(
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 50.dp),
+                    color = CanvasBrown
+                )
             }
         }
     }
