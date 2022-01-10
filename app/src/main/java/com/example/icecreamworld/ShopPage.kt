@@ -35,8 +35,8 @@ fun ShopScreen(
 
     val shop = ShopRepository.getShop(shopId!!)
     val scrollState = rememberScrollState()
-    var url = shop.websiteLink
-    if (!shop.websiteLink?.startsWith("http://")!! && !shop.websiteLink?.startsWith("https://"))
+    var url = shop?.websiteLink
+    if (!shop?.websiteLink?.startsWith("http://")!! && !shop.websiteLink?.startsWith("https://")!!)
         url = "http://" + url;
     val context = LocalContext.current
 
