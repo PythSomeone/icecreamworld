@@ -36,7 +36,7 @@ fun ShopScreen(
     val shop = ShopRepository.getShop(shopId!!)
     val scrollState = rememberScrollState()
     var url = shop?.websiteLink
-    if (!shop?.websiteLink?.startsWith("http://")!! && !shop.websiteLink.startsWith("https://"))
+    if (!shop?.websiteLink?.startsWith("http://")!! && !shop.websiteLink?.startsWith("https://")!!)
         url = "http://" + url;
     val context = LocalContext.current
 
@@ -102,28 +102,27 @@ fun ShopScreen(
                 backgroundColor = BackgroundCardColor
             ) {
 
-                shop.menu.forEach() { item ->
-                    Box(
-                        modifier = Modifier
+                    shop.menu.forEach() { item ->
+                        Box(modifier = Modifier
                             .fillMaxWidth()
                             .padding(14.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier.align(Alignment.BottomStart),
-                            text = item.name!!,
-                            color = OutlineBrown,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            modifier = Modifier.align(Alignment.BottomEnd),
-                            text = item.price.toString() + "€",
-                            color = OutlineBrown,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.BottomStart),
+                                text = item.name!!,
+                                color = OutlineBrown,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                text = item.price.toString()!! + "€",
+                                color = OutlineBrown,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
-                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -132,7 +131,7 @@ fun ShopScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                if (!shop.location.isNullOrEmpty()) {
+                if(!shop.location.isNullOrEmpty()) {
                     FloatingActionButton(
                         onClick = {
                             navController.navigate("MapPage")
@@ -147,7 +146,7 @@ fun ShopScreen(
                         Text("See on map")
                     }
                 }
-                if (!shop.websiteLink.isNullOrEmpty()) {
+                if(!shop.websiteLink.isNullOrEmpty()) {
                     FloatingActionButton(
                         onClick = {
                             val intent = Intent(Intent.ACTION_VIEW)
@@ -169,7 +168,7 @@ fun ShopScreen(
 
             }
 
-            if (!shop.location.isNullOrEmpty() || !shop.websiteLink.isNullOrEmpty()) {
+            if(!shop.location.isNullOrEmpty() || !shop.websiteLink.isNullOrEmpty()){
                 Spacer(modifier = Modifier.height(20.dp))
             }
 

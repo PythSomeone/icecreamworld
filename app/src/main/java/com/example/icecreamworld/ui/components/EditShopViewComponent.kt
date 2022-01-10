@@ -5,12 +5,16 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,22 +29,32 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Shop
+import com.example.icecreamworld.ui.outlinedtextfields.InputTextField
 import com.example.icecreamworld.ui.theme.ButtonBrown
 import com.example.icecreamworld.ui.theme.OutlineBrown
 import com.example.icecreamworld.viewmodel.ShopViewModel
 
 
+@ExperimentalFoundationApi
 @Composable
-fun EditProfileSection(
-    shop: Shop,
+fun EditShopSection(
+    shopId: String?=null,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: ShopViewModel = viewModel(),
 
     ) {
-    var description by remember { mutableStateOf(shop.description) }
-    var name by remember { mutableStateOf(shop.name) }
+    var shop = Shop()
+    if(shopId!=null) {
+        shop = ShopRepository.getShop(shopId!!)!!
+    }
+    var description = remember { mutableStateOf(shop?.description) }
+    var name = remember { mutableStateOf(shop?.name) }
+    var location = remember { mutableStateOf(shop?.location) }
+    var websiteLink = remember { mutableStateOf(shop?.websiteLink) }
+
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -54,12 +68,15 @@ fun EditProfileSection(
         imageUri = uri
     }
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp)
+                .verticalScroll(state = scrollState)
         ) {
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -69,7 +86,12 @@ fun EditProfileSection(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = {
-                EditProfileTextBox()
+                if(shopId!=null) {
+                    EditShopTextBox()
+                }
+                else{
+                    AddShopTextBox()
+                }
 
                 Spacer(Modifier.height(20.dp))
                 if ((imageUri != null)) {
@@ -109,7 +131,7 @@ fun EditProfileSection(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         content = {
                             Image(
-                                painter = rememberImagePainter(shop.image),
+                                painter = rememberImagePainter(shop?.image),
                                 contentDescription = null,
                                 modifier = modifier
                                     .aspectRatio(1f, matchHeightConstraintsFirst = true)
@@ -143,74 +165,10 @@ fun EditProfileSection(
 
                 Spacer(Modifier.height(20.dp))
 
-                OutlinedTextField(
-                    value = name!!,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = OutlineBrown,
-                        unfocusedBorderColor = OutlineBrown,
-                    ),
-                    shape = RoundedCornerShape(15.dp),
-                    label =
-                    {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = "Change name",
-                            fontSize = 15.sp,
-                            color = ButtonBrown,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                    },
-                    onValueChange = {
-                        name = it
-                    },
-                    modifier = Modifier
-                        .width(300.dp)
-                )
-
-
-                OutlinedTextField(
-                    value = description!!,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = OutlineBrown,
-                        unfocusedBorderColor = OutlineBrown,
-                    ),
-                    shape = RoundedCornerShape(15.dp),
-                    label =
-                    {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = "Change description",
-                            fontSize = 15.sp,
-                            color = ButtonBrown,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                    },
-                    onValueChange = {
-                        description = it
-                    },
-                    modifier = Modifier
-                        .width(300.dp)
-                )
-
-                Spacer(Modifier.height(20.dp))
-
-                Button(
-                    onClick = {
-                        launcher.launch("image/*")
-                    },
-                    shape = RoundedCornerShape(6.dp),
-                    modifier = Modifier
-                        .width(200.dp),
-                    content = {
-                        Text(
-                            text = "Change location",
-                            color = Color.White
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
-                )
+                InputTextField(label = "Change name", name = name)
+                InputTextField(label = "Change description", name = description)
+                InputTextField(label = "Change location", name = location)
+                InputTextField(label = "Change website address", name = websiteLink)
 
                 Spacer(Modifier.height(20.dp))
 
@@ -221,13 +179,24 @@ fun EditProfileSection(
                             "Changes submitted...",
                             Toast.LENGTH_SHORT
                         ).show()
-//                        val uriExists = imageUri!=null
-//                        if(uriExists) {
-//                            viewModel.changeData(user, description!!, displayName!!, imageUri!!)
-//                        }
-//                        else
-//                            viewModel.changeData(user, description!!, displayName!!)
-//                        navController.navigate(NavigationItem.Profile.route)
+                        val shopToSubmit = Shop(
+                            name=name.value,
+                            description = description.value,
+                            location = location.value,
+                            websiteLink = websiteLink.value
+                        )
+
+                        viewModel.sendForm(shop = shopToSubmit, toChange = shopId, uri = imageUri)
+
+
+
+                        if(shopId!=null) {
+                            navController.navigate("Shop/${shopId}")
+                        }
+                        else{
+                            navController.navigate("HomePage")
+                        }
+
                     },
                     shape = RoundedCornerShape(6.dp),
                     modifier = Modifier
@@ -250,9 +219,19 @@ fun EditProfileSection(
 
 
 @Composable
-fun EditProfileTextBox() {
+fun EditShopTextBox() {
     Text(
-        "Edit shop",
+        "Edit shop form",
+        Modifier.padding(end = 10.dp),
+        fontSize = 25.sp
+
+    )
+}
+
+@Composable
+fun AddShopTextBox() {
+    Text(
+        "Add shop form",
         Modifier.padding(end = 10.dp),
         fontSize = 25.sp
 

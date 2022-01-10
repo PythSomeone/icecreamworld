@@ -200,7 +200,7 @@ fun AddShopSection(
                                 Toast.LENGTH_SHORT
                             ).show()
                             Log.d("TAG", "$imageUri")
-                            viewModel.uploadImage(imageUri!!, description)
+//                            viewModel.uploadImage(imageUri!!, description)
                             imageUri = null
                             //navController.navigate(NavigationItem.Home.route)
 

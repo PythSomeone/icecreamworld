@@ -11,6 +11,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.data.repository.ShopFormRepository
 import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.data.repository.TagRepository
@@ -63,9 +64,11 @@ class MainActivity : ComponentActivity() {
             e.printStackTrace()
         }
         val location = fusedLocationClient.lastLocation
+
         setContent {
             IceCreamWorldTheme {
                 NavigationPage(location)
+//                EditShopScreen(navController = rememberNavController(), shopId = null)
             }
         }
     }

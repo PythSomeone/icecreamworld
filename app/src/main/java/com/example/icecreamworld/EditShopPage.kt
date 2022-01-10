@@ -10,21 +10,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.icecreamworld.model.Shop
-import com.example.icecreamworld.ui.components.EditProfileSection
+import com.example.icecreamworld.ui.components.EditShopSection
 import kotlinx.coroutines.delay
 
 @ExperimentalFoundationApi
 @Composable
 fun EditShopScreen(
     navController: NavController,
-    shopId: String?
+    shopId: String? = null,
 ) {
-    val shop = Shop()
     var refreshing by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(4.dp))
-        EditProfileSection(shop, navController)
+        EditShopSection(shopId, navController)
         Spacer(modifier = Modifier.height(25.dp))
         //refresh
         LaunchedEffect(refreshing) {
