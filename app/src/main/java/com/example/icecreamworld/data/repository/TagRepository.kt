@@ -139,7 +139,10 @@ class TagUses(
         if (tagId == null)
             TagRepository.addTag(tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
         else
-            TagRepository.changeTag(tagId, tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
+        {
+            val tag = TagRepository.getTag(tagId)
+            TagRepository.changeTag(tagId, tag!!.copy(numberOfUses = tag.numberOfUses + numberOfUses))
+        }
     }
 
 }
