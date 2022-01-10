@@ -17,14 +17,13 @@ import kotlinx.coroutines.delay
 @Composable
 fun EditShopScreen(
     navController: NavController,
-    shopId: String?
+    shopId: String? = null,
 ) {
-    val shop = Shop()
     var refreshing by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(4.dp))
-        EditShopSection(shop, navController)
+        EditShopSection(shopId, navController)
         Spacer(modifier = Modifier.height(25.dp))
         //refresh
         LaunchedEffect(refreshing) {
