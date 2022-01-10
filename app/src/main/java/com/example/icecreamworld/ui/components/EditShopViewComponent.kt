@@ -31,6 +31,9 @@ import com.example.icecreamworld.model.Product
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.Tag
 import com.example.icecreamworld.ui.outlinedtextfields.InputTextField
+import com.example.icecreamworld.ui.outlinedtextfields.ProductNameTextField
+import com.example.icecreamworld.ui.outlinedtextfields.ProductPriceTextField
+import com.example.icecreamworld.ui.theme.BackgroundCardColor
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.ButtonBrown
 import com.example.icecreamworld.ui.theme.OutlineBrown
@@ -48,15 +51,13 @@ fun ShopFormSection(
     ) {
     var shop = Shop()
     if(shopId!=null) {
-        shop = ShopRepository.getShop(shopId!!)!!
+        shop = ShopRepository.getShop(shopId)!!
     }
-    var description = remember { mutableStateOf(shop?.description) }
-    var name = remember { mutableStateOf(shop?.name) }
-    var location = remember { mutableStateOf(shop?.location) }
-    var websiteLink = remember { mutableStateOf(shop?.websiteLink) }
-
-    var tagList = mutableListOf<Tag>(Tag("Shiet"))
-    var menu = remember { mutableStateOf(shop?.menu) }
+    var description = remember { mutableStateOf(shop.description) }
+    var name = remember { mutableStateOf(shop.name) }
+    var location = remember { mutableStateOf(shop.location) }
+    var websiteLink = remember { mutableStateOf(shop.websiteLink) }
+    var menu = remember { mutableStateOf(shop.menu) }
 
 
     var imageUri by remember {
@@ -73,6 +74,8 @@ fun ShopFormSection(
     }
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+
     Box(
         Modifier
             .fillMaxSize()
@@ -81,7 +84,6 @@ fun ShopFormSection(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .verticalScroll(state = scrollState)
         ) {
 
             Column(
@@ -132,7 +134,7 @@ fun ShopFormSection(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             content = {
                                 Image(
-                                    painter = rememberImagePainter(shop?.image),
+                                    painter = rememberImagePainter(shop.image),
                                     contentDescription = null,
                                     modifier = modifier
                                         .aspectRatio(1f, matchHeightConstraintsFirst = true)
@@ -187,6 +189,59 @@ fun ShopFormSection(
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
                     )
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        shape = MaterialTheme.shapes.medium,
+                        backgroundColor = BackgroundCardColor
+                    ) {
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp)
+                        ) {
+                            menu.value.forEach() { item ->
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+
+                                ) {
+                                    ProductNameTextField(label = "Change name", product = item)
+                                    ProductPriceTextField(label = "Change price", product = item)
+                                    Button(
+                                        onClick = {
+
+                                        },
+                                        shape = RoundedCornerShape(6.dp),
+                                        modifier = Modifier,
+                                        content = {
+                                            Text(
+                                                text = "x",
+                                                color = Color.White
+                                            )
+                                        },
+                                        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                                    )
+                                }
+                            }
+                            Button(
+                                onClick = {
+                                    shop.menu.add(Product())
+                                },
+                                shape = RoundedCornerShape(6.dp),
+                                modifier = Modifier,
+                                content = {
+                                    Text(
+                                        text = "+",
+                                        color = Color.White
+                                    )
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
+                            )
+                        }
+
+                    }
 
                     Spacer(Modifier.height(20.dp))
 
