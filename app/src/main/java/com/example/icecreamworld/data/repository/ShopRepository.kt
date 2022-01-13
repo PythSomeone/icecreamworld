@@ -12,17 +12,18 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 
 object ShopRepository : Repository(Handler(Folder.Shops)) {
 
-    internal fun addShop(shop: Shop) {
+    internal fun addShop(shop: Shop, uri: Uri? = null) {
         if (shopExists(shop).not()) {
             handler.addValue(shop)
             TagUses(shop).increase()
         }
     }
 
-    internal fun changeShop(id: String, changedShop: Shop) {
+    internal fun changeShop(id: String, changedShop: Shop, uri: Uri? = null) {
         getShop(id)?.let {
             if (it == changedShop)
                 return
@@ -37,6 +38,7 @@ object ShopRepository : Repository(Handler(Folder.Shops)) {
             handler.deleteValue(id)
             StorageHandler.removePicture(it.image!!)
         }
+        ShopFormRepository.clearFormsFor(id)
     }
 
     fun getShop(id: String): Shop? {
@@ -83,7 +85,7 @@ object ShopRepository : Repository(Handler(Folder.Shops)) {
 
 object ShopFormRepository : Repository(Handler(Folder.ShopForms)) {
 
-    suspend fun addShopForm(shopForm: ShopForm, uri: Uri? = null) {
+    suspend fun addShopForm(shopForm: ShopForm, uri: Uri? = null): String {
         val id: String = handler.addValue(shopForm)
         if (uri != null) {
             setPicture(
@@ -92,6 +94,7 @@ object ShopFormRepository : Repository(Handler(Folder.ShopForms)) {
                 shopForm = shopForm
             )
         }
+        return id
     }
 
     fun approveShopForm(id: String) {
@@ -122,6 +125,22 @@ object ShopFormRepository : Repository(Handler(Folder.ShopForms)) {
                 return it.getValue<ShopForm>() as ShopForm
         }
         return null
+    }
+
+    internal fun clearFormsFor(id: String) {
+        findFormsChanging(id).forEach {
+            rejectShopForm(it)
+        }
+    }
+
+    private fun findFormsChanging(id: String): MutableList<String> {
+        val listToDelete = mutableListOf<String>()
+        data.value.forEach {
+            val form = getShopForm(it.key!!)
+            if (form!!.toChange == id)
+                listToDelete.add(it.key!!)
+        }
+        return listToDelete
     }
 
     private suspend fun setPicture(uri: Uri, id: String, shopForm: ShopForm) {
