@@ -31,7 +31,7 @@ import com.example.icecreamworld.ui.theme.CanvasBrown
 fun ManagementScreen(navController: NavHostController) {
     HomeScreenBackground()
     var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("Add new ICS", "Delete ICS", "Edit ICS")
+    val suggestions = listOf("Manage ICS forms", "Manage ICS")
     var selectedText by remember { mutableStateOf("Choose what you want to do") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -77,13 +77,10 @@ fun ManagementScreen(navController: NavHostController) {
                 suggestions.forEach { label ->
                     DropdownMenuItem(onClick = {
                         selectedText = label
-                        if(selectedText == "Add new ICS"){
+                        if(selectedText == "Manage ICS forms"){
                             navController.navigate("ApproveListScreen")
                         }
-                        if(selectedText == "Delete ICS"){
-                            navController.navigate("EditListScreen")
-                        }
-                        if (selectedText == "Edit ICS"){
+                        if(selectedText == "Manage ICS"){
                             navController.navigate("EditListScreen")
                         }
                     },

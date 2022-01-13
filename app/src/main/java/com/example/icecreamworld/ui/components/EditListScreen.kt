@@ -1,5 +1,6 @@
 package com.example.icecreamworld.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,8 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.icecreamworld.data.repository.ShopFormRepository
 import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Shop
+import com.example.icecreamworld.model.ShopForm
 import com.example.icecreamworld.ui.appbar.TopAppBar
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
@@ -70,13 +73,12 @@ fun EditListScreen(navController: NavController){
             ) {
                 items(shops.data.value) { snapshot ->
                     ListItem(
-                        Modifier.clickable { navController.navigate("ShopForm/") },
-                        text = {Text(snapshot.getValue<Shop>()?.name!!)},
+                        Modifier.clickable { navController.navigate("Shop/${snapshot.key}") },
+                        text = {Text (snapshot.getValue<Shop>()?.name!!)},
                         trailing = {
                             //Icon(Icons.Default.Delete, "Delete", Modifier.clickable { ShopRepository.deleteShop(snapshot.getValue<Shop>()?.name!!) })
                         }
                     )
-                    
 
                 }
             }

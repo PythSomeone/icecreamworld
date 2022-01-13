@@ -66,16 +66,22 @@ fun NavigationPage(location: Task<Location>) {
             composable(DrawerScreens.ManagementPanel.route) {
                 ManagementScreen(navController = navController)
             }
+            composable("ManageForm/{FormId}"){ backstackEntry ->
+                ManageFormsPage(
+                    navController,
+                    backstackEntry.arguments?.getString("FormId"),
+                )
+            }
             composable(DrawerScreens.NewIceCreamShop.route) { backstackEntry ->
                 ShopFormScreen(
                     navController,
                     backstackEntry.arguments?.getString("ShopId"),
                 )
             }
-            composable("ShopForm/{ShopId}"){ backstackEntry ->
+            composable("ShopForm/{shopId}") { backstackEntry ->
                 ShopFormScreen(
                     navController,
-                    backstackEntry.arguments?.getString("ShopId"),
+                    backstackEntry.arguments?.getString("shopId"),
                 )
             }
             composable(DrawerScreens.NewMenu.route) {

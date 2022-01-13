@@ -35,6 +35,8 @@ import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.ButtonBrown
 import com.example.icecreamworld.ui.theme.OutlineBrown
 import com.example.icecreamworld.viewmodel.ShopViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 @ExperimentalFoundationApi
@@ -42,21 +44,19 @@ import com.example.icecreamworld.viewmodel.ShopViewModel
 fun ShopFormSection(
     shopId: String?=null,
     navController: NavController,
-    modifier: Modifier = Modifier,
     viewModel: ShopViewModel = viewModel(),
 
     ) {
     var shop = Shop()
     if(shopId!=null) {
-        shop = ShopRepository.getShop(shopId!!)!!
+        shop = ShopRepository.getShop(shopId)!!
     }
-    var description = remember { mutableStateOf(shop?.description) }
-    var name = remember { mutableStateOf(shop?.name) }
-    var location = remember { mutableStateOf(shop?.location) }
-    var websiteLink = remember { mutableStateOf(shop?.websiteLink) }
+    var description = remember { mutableStateOf(shop.description) }
+    var name = remember { mutableStateOf(shop.name) }
+    var location = remember { mutableStateOf(shop.location) }
+    var websiteLink = remember { mutableStateOf(shop.websiteLink) }
 
-    var tagList = mutableListOf<Tag>(Tag("Shiet"))
-    var menu = remember { mutableStateOf(shop?.menu) }
+    var menu = remember { mutableStateOf(shop.menu) }
 
 
     var imageUri by remember {
@@ -79,7 +79,7 @@ fun ShopFormSection(
             .background(BackgroundColor)
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(state = scrollState)
         ) {
@@ -116,7 +116,7 @@ fun ShopFormSection(
                                     bitmap.value?.let { btm ->
                                         ShopImage(
                                             btm,
-                                            modifier = modifier
+                                            modifier = Modifier
                                                 .aspectRatio(1f, matchHeightConstraintsFirst = true)
                                                 .height(100.dp)
                                         )
@@ -134,7 +134,7 @@ fun ShopFormSection(
                                 Image(
                                     painter = rememberImagePainter(shop?.image),
                                     contentDescription = null,
-                                    modifier = modifier
+                                    modifier = Modifier
                                         .aspectRatio(1f, matchHeightConstraintsFirst = true)
                                         .height(100.dp)
                                 )
@@ -192,6 +192,7 @@ fun ShopFormSection(
 
                     Button(
                         onClick = {
+
                             Toast.makeText(
                                 context,
                                 "Changes submitted...",
@@ -205,13 +206,20 @@ fun ShopFormSection(
                                 websiteLink = websiteLink.value,
                                 menu = menu.value
                             )
-
-                            viewModel.sendForm(
-                                shop = shopToSubmit,
-                                toChange = shopId,
-                                uri = imageUri
-                            )
-
+                            if(Firebase.auth.currentUser != null){
+                                viewModel.editShop(
+                                    shop = shopToSubmit,
+                                    toChange = shopId,
+                                    uri = imageUri
+                                )
+                            }
+                            else{
+                                viewModel.sendForm(
+                                    shop = shopToSubmit,
+                                    toChange = shopId,
+                                    uri = imageUri
+                                )
+                            }
                             if (shopId != null) {
                                 navController.navigate("Shop/${shopId}")
                             } else {
