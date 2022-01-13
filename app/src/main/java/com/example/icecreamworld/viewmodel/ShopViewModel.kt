@@ -1,7 +1,6 @@
 package com.example.icecreamworld.viewmodel
 
 
-import com.example.icecreamworld.utils.LoadingState
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +9,7 @@ import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Product
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.ShopForm
+import com.example.icecreamworld.utils.LoadingState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -69,6 +69,4 @@ class ShopViewModel : ViewModel() {
             loadingState.emit(LoadingState.error(e.localizedMessage))
         }
     }
-
-
 }

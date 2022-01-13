@@ -18,26 +18,7 @@ fun ShopFormScreen(
     navController: NavController,
     shopId: String? = null,
 ) {
-    var refreshing by remember { mutableStateOf(false) }
-
     Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.height(4.dp))
-        ShopFormSection(shopId, navController)
-        Spacer(modifier = Modifier.height(25.dp))
-        //refresh
-        LaunchedEffect(refreshing) {
-            if (refreshing) {
-                delay(2000)
-                refreshing = false
-            }
-        }
+        ShopFormSection(shopId = shopId, navController = navController)
     }
 }
-
-//@ExperimentalFoundationApi
-//@Composable
-//@Preview
-//fun EditShopPreview() {
-//    EditShopScreen(rememberNavController())
-//}
-
