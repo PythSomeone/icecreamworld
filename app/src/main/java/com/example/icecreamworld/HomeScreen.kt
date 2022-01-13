@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.icecreamworld.ui.button.HomeScreenButton
 import com.example.icecreamworld.ui.canva.IceCreamWorldCanvas
+import com.example.icecreamworld.ui.components.DrawerScreens
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -20,7 +21,12 @@ import com.google.firebase.ktx.Firebase
 fun HomeScreen(navController: NavHostController) {
 
     HomeScreenBackground()
-
+    val menu: String = if (Firebase.auth.currentUser!= null){
+        "Menu"
+    }
+    else{
+        "Guest"
+    }
     Box(
         modifier = Modifier
             .background(color = BackgroundColor)
@@ -39,14 +45,14 @@ fun HomeScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 HomeScreenButton(
-                    text = "Guest",
+                    text = menu,
                     navController = navController,
                     route = "ProposedPage"
                 )
                 HomeScreenButton(
                     text = "Add your ICS",
                     navController = navController,
-                    route = "AddShopScreen"
+                    route = DrawerScreens.NewIceCreamShop.route
                 )
                 if (Firebase.auth.currentUser != null) {
                     HomeScreenButton(
