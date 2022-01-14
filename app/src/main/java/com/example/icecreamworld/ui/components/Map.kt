@@ -1,7 +1,11 @@
 package com.example.icecreamworld.ui.components
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,10 +21,13 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.example.icecreamworld.data.repository.ShopRepository
+import com.example.icecreamworld.model.Shop
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.MapView
 import com.google.android.libraries.maps.model.LatLng
 import com.google.android.libraries.maps.model.MarkerOptions
+import com.google.firebase.database.ktx.getValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +37,7 @@ fun GoogleMaps(currentLocation: Location) {
     val mapView = rememberMapViewWithLifeCycle()
     val latlng =
         remember { mutableStateOf("lat : ${currentLocation.latitude},lang: ${currentLocation.longitude}") }
+    val geocoder = Geocoder(LocalContext.current)
     Box() {
 
         Column(
@@ -52,10 +60,23 @@ fun GoogleMaps(currentLocation: Location) {
                             it.addMarker(
                                 MarkerOptions()
                                     .position(currentLatLng)
+                                    .title("Your position")
                             )
-                            latlng.value = ("lat: ${it.getCameraPosition().target.latitude}," +
-                                    " lang: ${it.getCameraPosition().target.longitude}")
+                            latlng.value = ("lat: ${it.cameraPosition.target.latitude}," +
+                                    " lang: ${it.cameraPosition.target.longitude}")
+                            ShopRepository.data.value.forEach { snapshot ->
+                                val currentAddress = geocoder.getFromLocationName(snapshot.getValue<Shop>()?.location!!,1)
+                                if (currentAddress.isNotEmpty()){
+                                    val specifiedLatLng = LatLng(currentAddress[0].latitude,currentAddress[0].longitude)
+                                    it.addMarker(
+                                        MarkerOptions()
+                                            .position(specifiedLatLng)
+                                            .title(snapshot.getValue<Shop>()?.name)
+                                    )
+                                }
+                            }
                         }
+
                     }
                 }
             }
