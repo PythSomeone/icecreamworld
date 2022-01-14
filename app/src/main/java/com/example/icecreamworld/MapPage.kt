@@ -1,27 +1,36 @@
 package com.example.icecreamworld
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.location.Geocoder
 import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.ui.appbar.TopAppBar
 import com.example.icecreamworld.ui.components.GoogleMaps
 import com.example.icecreamworld.ui.components.SearchSection
+import com.example.icecreamworld.ui.components.ShopsCard
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.ktx.getValue
 
 @Composable
 fun MapScreen(openDrawer: () -> Unit, navController: NavHostController, location: Task<Location>) {
@@ -29,6 +38,7 @@ fun MapScreen(openDrawer: () -> Unit, navController: NavHostController, location
     val view = LocalView.current
     val text = "ICS Maps"
     val currentLocation = location.result
+
     val shopList = listOf(
         Shop(
             "gjo",

@@ -1,5 +1,7 @@
 package com.example.icecreamworld
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -72,7 +74,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(shops.data.value.asReversed()) { snapshot ->
+                items(shops.data.value.asReversed().distinct()) { snapshot ->
                     ShopsCard(
                         navController,
                         snapshot.getValue<Shop>()?.name!!,
