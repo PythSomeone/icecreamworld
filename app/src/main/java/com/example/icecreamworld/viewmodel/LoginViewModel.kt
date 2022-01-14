@@ -1,5 +1,7 @@
 package com.example.icecreamworld.viewmodel
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -12,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class LoginViewModel : ViewModel() {
-    val loadingState = MutableStateFlow(LoadingState.IDLE)
+    private val loadingState = MutableStateFlow(LoadingState.IDLE)
 
     fun signInWithEmailAndPassword(email: String, password: String, navController: NavController) =
         viewModelScope.launch {

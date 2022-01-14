@@ -20,7 +20,7 @@ fun ProductPriceTextField(
 ) {
     OutlinedTextField(
 
-        value = "%.2f".format(product.price) + "PLN",
+        value = "%.2f".format(product.price) + "€",
         shape = RoundedCornerShape(15.dp),
         label = {
             Text(

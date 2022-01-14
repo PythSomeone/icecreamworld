@@ -23,7 +23,7 @@ sealed class DrawerScreens(val title: String, val route: String) {
     object Map : DrawerScreens("Map", "MapPage")
     object ManagementPanel : DrawerScreens("Management Panel", "ManagementPage")
     object NewIceCreamShop : DrawerScreens("New Ice Cream Shop", "NewIceCreamShopPage")
-    object NewMenu : DrawerScreens("New Menu", "AddMenuScreen")
+    object NewMenu : DrawerScreens("New Menu", "ShopForm/{ShopId}")
     object Logout : DrawerScreens("Log out", "LogOut")
 }
 

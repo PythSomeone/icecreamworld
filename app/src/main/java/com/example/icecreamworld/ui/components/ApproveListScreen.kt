@@ -1,9 +1,12 @@
-package com.example.icecreamworld
+package com.example.icecreamworld.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -15,38 +18,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.icecreamworld.data.repository.ShopFormRepository
 import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Shop
-import com.example.icecreamworld.ui.appbar.TopAppBar
-import com.example.icecreamworld.ui.components.SearchSection
-import com.example.icecreamworld.ui.components.ShopsCard
+import com.example.icecreamworld.model.ShopForm
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
 import com.google.firebase.database.ktx.getValue
 
-
+@ExperimentalMaterialApi
 @Composable
-fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
+fun ApproveListScreen(navController: NavController){
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
-    val text = "The nearest ice cream shop"
-    val shops = ShopRepository
-
-
+    val text = "Select the shop to approve"
+    val forms = ShopFormRepository
     Box(
         Modifier
             .fillMaxSize()
             .background(BackgroundColor)
     ) {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            TopAppBar(
-                backgroundColor = BackgroundColor,
-                onButtonClicked = { openDrawer() },
-                title = "Proposed",
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text,
                 color = CanvasBrown,
@@ -65,21 +59,24 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                     value = value
                     view.clearFocus()
                 },
-                navController = navController
+                navController = navController as NavHostController
             )
             Spacer(modifier = Modifier.height(20.dp))
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(shops.data.value.asReversed()) { snapshot ->
-                    ShopsCard(
-                        navController,
-                        snapshot.getValue<Shop>()?.name!!,
-                        snapshot.getValue<Shop>()?.description!!,
-                        snapshot.getValue<Shop>()?.image!!,
-                        snapshot.key!!
+                items(forms.data.value) { snapshot ->
+                    val formId = snapshot.key
+                    ListItem(
+                        Modifier.clickable { navController.navigate("ManageForm/${formId.toString()}") },
+                        text = {Text(snapshot.getValue<ShopForm>()?.shop?.name!!)},
+                        trailing = {
+                            //Icon(Icons.Default.Delete, "Delete", Modifier.clickable { ShopRepository.deleteShop(snapshot.getValue<Shop>()?.name!!) })
+                        }
                     )
+
+
                 }
             }
         }

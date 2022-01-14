@@ -12,8 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.*
-import com.example.icecreamworld.ui.components.Drawer
-import com.example.icecreamworld.ui.components.DrawerScreens
+import com.example.icecreamworld.ui.components.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -56,7 +55,6 @@ fun NavigationPage(location: Task<Location>) {
                 HomeScreen(navController)
             }
             composable(DrawerScreens.Proposed.route) {
-                //Sample Usage of drawer. Inside function simply use TopAppBar with "onButtonClicked = { openDrawer() }"
                 ProposedScreen(openDrawer = { openDrawer() }, navController)
             }
             composable(DrawerScreens.Search.route) {
@@ -66,10 +64,25 @@ fun NavigationPage(location: Task<Location>) {
                 MapScreen(openDrawer = { openDrawer() }, navController, location)
             }
             composable(DrawerScreens.ManagementPanel.route) {
-
+                ManagementScreen(navController = navController)
             }
-            composable(DrawerScreens.NewIceCreamShop.route) {
-                ShopFormScreen(navController)
+            composable("ManageForm/{FormId}"){ backstackEntry ->
+                ManageFormsPage(
+                    navController,
+                    backstackEntry.arguments?.getString("FormId"),
+                )
+            }
+            composable(DrawerScreens.NewIceCreamShop.route) { backstackEntry ->
+                ShopFormScreen(
+                    navController,
+                    backstackEntry.arguments?.getString("ShopId"),
+                )
+            }
+            composable("ShopForm/{shopId}") { backstackEntry ->
+                ShopFormScreen(
+                    navController,
+                    backstackEntry.arguments?.getString("shopId"),
+                )
             }
             composable(DrawerScreens.NewMenu.route) {
 
@@ -77,12 +90,6 @@ fun NavigationPage(location: Task<Location>) {
             composable(DrawerScreens.Logout.route) {
                 Firebase.auth.signOut()
                 HomeScreen(navController)
-            }
-            composable("ShopForm/{ShopId}") { backstackEntry ->
-                ShopFormScreen(
-                    navController,
-                    backstackEntry.arguments?.getString("ShopId"),
-                )
             }
             composable("Shop/{ShopId}") { backstackEntry ->
                 ShopScreen(
@@ -92,6 +99,12 @@ fun NavigationPage(location: Task<Location>) {
             }
             composable("LoginPage") {
                 LoginScreen(navController)
+            }
+            composable("EditListScreen") {
+                EditListScreen(navController = navController)
+            }
+            composable("ApproveListScreen") {
+                ApproveListScreen(navController = navController)
             }
         }
     }

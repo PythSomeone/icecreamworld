@@ -110,7 +110,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = vi
                         userPassword.trim(),
                         navController
                     )
-                    delay(1000)
+                    delay(2000)
                     if (Firebase.auth.currentUser != null) {
                         Toast.makeText(
                             context,

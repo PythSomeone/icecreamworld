@@ -46,6 +46,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 @ExperimentalMaterialApi
@@ -59,7 +61,7 @@ fun ShopFormSection(
 
     ) {
     var shop = Shop()
-    if (shopId != null) {
+    if(shopId!=null) {
         shop = ShopRepository.getShop(shopId)!!
     }
     val description = remember { mutableStateOf(shop.description) }
@@ -445,6 +447,7 @@ fun ShopFormSection(
 
                     Button(
                         onClick = {
+
                             Toast.makeText(
                                 context,
                                 "Changes submitted...",
@@ -466,6 +469,20 @@ fun ShopFormSection(
                                 uri = imageUri
                             )
 
+                            if(Firebase.auth.currentUser != null){
+                                viewModel.editShop(
+                                    shop = shopToSubmit,
+                                    toChange = shopId,
+                                    uri = imageUri
+                                )
+                            }
+                            else{
+                                viewModel.sendForm(
+                                    shop = shopToSubmit,
+                                    toChange = shopId,
+                                    uri = imageUri
+                                )
+                            }
                             if (shopId != null) {
                                 navController.navigate("Shop/${shopId}")
                             } else {
