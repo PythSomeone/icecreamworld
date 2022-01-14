@@ -67,6 +67,14 @@ fun ShopFormSection(
     val location = remember { mutableStateOf(shop.location) }
     val websiteLink = remember { mutableStateOf(shop.websiteLink) }
     val menu = remember { mutableStateOf(shop.menu) }
+    var productName by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var tag1 by remember { mutableStateOf("") }
+    var tag2 by remember { mutableStateOf("") }
+    var tag3 by remember { mutableStateOf("") }
+    val addAlertDialog = remember { mutableStateOf(false) }
+    val editAlertDialog = remember { mutableStateOf(false) }
+    val enabled = remember { mutableStateOf(false) }
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -192,14 +200,7 @@ fun ShopFormSection(
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
                 )
-                var productName by remember { mutableStateOf("") }
-                var price by remember { mutableStateOf("") }
-                var tag1 by remember { mutableStateOf("") }
-                var tag2 by remember { mutableStateOf("") }
-                var tag3 by remember { mutableStateOf("") }
-                val addAlertDialog = remember { mutableStateOf(false) }
-                val editAlertDialog = remember { mutableStateOf(false) }
-                val enabled = remember { mutableStateOf(false) }
+
                 if (addAlertDialog.value) {
                     AlertDialog(onDismissRequest = { addAlertDialog.value = false },
                         title = { Text(text = "Now you can add product") },
@@ -290,17 +291,22 @@ fun ShopFormSection(
                 ) {
                     menu.value.forEach { item ->
                         if (editAlertDialog.value) {
+                            productName = item.name!!
+                            price = item.price.toString()
+                            tag1 = item.tags[0].name!!
+                            tag2 = item.tags[1].name!!
+                            tag3 = item.tags[2].name!!
                             AlertDialog(onDismissRequest = { editAlertDialog.value = false },
                                 title = { Text(text = "Now you can edit product") },
                                 text = {
                                     Column {
                                         OutlinedTextField(
-                                            value = item.name!!,
+                                            value = productName,
                                             onValueChange = { productName = it },
                                             placeholder = { Text("Name of the product") }
                                         )
                                         OutlinedTextField(
-                                            value = item.price.toString(),
+                                            value = price,
                                             onValueChange = { price = getValidatedNumber(it) },
                                             placeholder = { Text("Price") },
                                             keyboardOptions = KeyboardOptions.Default.copy(
@@ -308,17 +314,17 @@ fun ShopFormSection(
                                             )
                                         )
                                         OutlinedTextField(
-                                            value = item.tags[0].name!!,
+                                            value = tag1,
                                             onValueChange = { tag1 = it },
                                             placeholder = { Text("Tag 1") },
                                         )
                                         OutlinedTextField(
-                                            value = item.tags[1].name!!,
+                                            value = tag2,
                                             onValueChange = { tag2 = it },
                                             placeholder = { Text("Tag 2") },
                                         )
                                         OutlinedTextField(
-                                            value = item.tags[2].name!!,
+                                            value = tag3,
                                             onValueChange = { tag3 = it },
                                             placeholder = { Text("Tag 3") },
                                         )
@@ -387,17 +393,21 @@ fun ShopFormSection(
                                     Row {
                                         Icon(
                                             Icons.Default.Edit, "Edit",
-                                            Modifier.clickable { editAlertDialog.value = true }
+                                            Modifier
+                                                .clickable { editAlertDialog.value = true }
+                                                .padding(top = 30.dp)
                                         )
                                         Icon(
                                             Icons.Default.Delete, "Delete",
-                                            modifier = Modifier.clickable {
-                                                menu.value.remove(item)
-                                                scope.launch {
-                                                    refreshing.value = true
-                                                    refreshing.value = false
+                                            modifier = Modifier
+                                                .clickable {
+                                                    menu.value.remove(item)
+                                                    scope.launch {
+                                                        refreshing.value = true
+                                                        refreshing.value = false
+                                                    }
                                                 }
-                                            }
+                                                .padding(top = 30.dp)
                                         )
                                     }
                                 },
@@ -421,7 +431,7 @@ fun ShopFormSection(
                             addAlertDialog.value = true
                         },
                         shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier,
+                        modifier = Modifier.padding(top = 10.dp),
                         content = {
                             Text(
                                 text = "+",
