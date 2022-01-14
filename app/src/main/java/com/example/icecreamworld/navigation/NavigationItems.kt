@@ -58,7 +58,7 @@ fun NavigationPage(location: Task<Location>) {
                 ProposedScreen(openDrawer = { openDrawer() }, navController)
             }
             composable(DrawerScreens.Search.route) {
-
+                SearchScreen(openDrawer = { openDrawer() }, navController)
             }
             composable(DrawerScreens.Map.route) {
                 MapScreen(openDrawer = { openDrawer() }, navController, location)
