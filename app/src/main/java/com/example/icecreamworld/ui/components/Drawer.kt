@@ -23,7 +23,6 @@ sealed class DrawerScreens(val title: String, val route: String) {
     object Map : DrawerScreens("Map", "MapPage")
     object ManagementPanel : DrawerScreens("Management Panel", "ManagementPage")
     object NewIceCreamShop : DrawerScreens("New Ice Cream Shop", "NewIceCreamShopPage")
-    object NewMenu : DrawerScreens("New Menu", "ShopForm/{ShopId}")
     object Logout : DrawerScreens("Log out", "LogOut")
 }
 
@@ -33,7 +32,6 @@ private val screensForAdmin = listOf(
     DrawerScreens.Map,
     DrawerScreens.ManagementPanel,
     DrawerScreens.NewIceCreamShop,
-    DrawerScreens.NewMenu,
     DrawerScreens.Logout
 )
 private val screensForGuest = listOf(
