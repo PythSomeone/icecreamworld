@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.icecreamworld.R
@@ -57,11 +58,14 @@ fun ShopsCard(
                     text = name,
                     style = MaterialTheme.typography.h4,
                     color = CanvasBrown,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.body2,
-                    color = CanvasBrown
+                    color = CanvasBrown,
+                    maxLines = 3,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 FloatingActionButton(

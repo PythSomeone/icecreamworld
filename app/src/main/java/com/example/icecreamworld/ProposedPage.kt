@@ -72,7 +72,7 @@ fun ProposedScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(shops.data.value) { snapshot ->
+                items(shops.data.value.asReversed()) { snapshot ->
                     ShopsCard(
                         navController,
                         snapshot.getValue<Shop>()?.name!!,
