@@ -84,9 +84,6 @@ fun NavigationPage(location: Task<Location>) {
                     backstackEntry.arguments?.getString("shopId"),
                 )
             }
-            composable(DrawerScreens.NewMenu.route) {
-
-            }
             composable(DrawerScreens.Logout.route) {
                 Firebase.auth.signOut()
                 HomeScreen(navController)

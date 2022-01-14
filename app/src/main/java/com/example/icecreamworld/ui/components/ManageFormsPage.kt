@@ -107,6 +107,7 @@ fun ManageFormsPage(
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold
             )
+            shopForm.menu.forEach { item ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,7 +116,7 @@ fun ManageFormsPage(
                 backgroundColor = BackgroundCardColor
             ) {
 
-                    shopForm.menu.forEach { item ->
+
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .padding(14.dp)
