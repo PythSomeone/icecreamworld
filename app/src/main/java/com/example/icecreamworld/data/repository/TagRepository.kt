@@ -10,17 +10,22 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
+import java.util.*
 
 
 object TagRepository : Repository(Handler(Folder.Tags)) {
 
     fun addTag(tag: Tag) {
         data.value.forEach {
-            if (it.getValue<Tag>()!!.name!!.capitalize() == tag.name)
+            if (it.getValue<Tag>()!!.name!!.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                } == tag.name)
                 return
         }
         handler.addValue(
-            tag.copy(name = tag.name!!.capitalize())
+            tag.copy(name = tag.name!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
         )
     }
 
@@ -138,10 +143,12 @@ class TagUses(
 
         if (tagId == null)
             TagRepository.addTag(tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
-        else
-        {
+        else {
             val tag = TagRepository.getTag(tagId)
-            TagRepository.changeTag(tagId, tag!!.copy(numberOfUses = tag.numberOfUses + numberOfUses))
+            TagRepository.changeTag(
+                tagId,
+                tag!!.copy(numberOfUses = tag.numberOfUses + numberOfUses)
+            )
         }
     }
 

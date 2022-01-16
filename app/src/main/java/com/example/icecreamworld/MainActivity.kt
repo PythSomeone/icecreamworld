@@ -1,7 +1,6 @@
 package com.example.icecreamworld
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
@@ -12,7 +11,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.compose.rememberNavController
 import com.example.icecreamworld.data.repository.ShopFormRepository
 import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.data.repository.TagRepository

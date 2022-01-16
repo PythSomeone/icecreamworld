@@ -21,7 +21,14 @@ fun ProductNameTextField(
     OutlinedTextField(
         value = product.name!!,
         shape = RoundedCornerShape(15.dp),
-        label = { Text(text = label, fontSize = 10.sp, color = ButtonBrown, fontWeight = FontWeight.Bold) },
+        label = {
+            Text(
+                text = label,
+                fontSize = 10.sp,
+                color = ButtonBrown,
+                fontWeight = FontWeight.Bold
+            )
+        },
         onValueChange = {
             product.name = it
         },

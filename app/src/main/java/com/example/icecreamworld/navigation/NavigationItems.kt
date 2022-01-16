@@ -55,18 +55,31 @@ fun NavigationPage(location: Task<Location>) {
                 HomeScreen(navController)
             }
             composable(DrawerScreens.Proposed.route) {
-                ProposedScreen(openDrawer = { openDrawer() }, navController)
+                ProposedScreen(openDrawer = { openDrawer() }, navController, location)
             }
             composable(DrawerScreens.Search.route) {
-
+                SearchScreen(openDrawer = { openDrawer() }, navController)
             }
-            composable(DrawerScreens.Map.route) {
-                MapScreen(openDrawer = { openDrawer() }, navController, location)
+            composable(DrawerScreens.Map.route) { backStackEntry ->
+                MapScreen(
+                    openDrawer = { openDrawer() },
+                    navController,
+                    location,
+                    backStackEntry.arguments?.getString("ShopId")
+                )
+            }
+            composable("MapPage/{ShopId}") { backStackEntry ->
+                MapScreen(
+                    openDrawer = { openDrawer() },
+                    navController,
+                    location,
+                    backStackEntry.arguments?.getString("ShopId")
+                )
             }
             composable(DrawerScreens.ManagementPanel.route) {
                 ManagementScreen(navController = navController)
             }
-            composable("ManageForm/{FormId}"){ backstackEntry ->
+            composable("ManageForm/{FormId}") { backstackEntry ->
                 ManageFormsPage(
                     navController,
                     backstackEntry.arguments?.getString("FormId"),

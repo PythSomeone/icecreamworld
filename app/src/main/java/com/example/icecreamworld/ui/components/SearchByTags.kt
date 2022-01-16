@@ -1,8 +1,9 @@
 package com.example.icecreamworld.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,19 +22,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.rememberImagePainter
 import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.model.Shop
-import com.example.icecreamworld.ui.imageview.RoundImage
-import com.example.icecreamworld.ui.theme.BackgroundColor
-import com.example.icecreamworld.ui.theme.CanvasBrown
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 @Composable
-fun SearchSection(
+fun SearchByTagsSection(
     modifier: Modifier = Modifier,
     textValue: MutableState<TextFieldValue>,
     label: String,
@@ -49,13 +45,15 @@ fun SearchSection(
     }
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 40.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.Start
     ) {
         OutlinedTextField(
             modifier = modifier
-                .fillMaxWidth(.6f)
+                .fillMaxWidth(.65f)
                 .onFocusChanged { onFocusChanged(it) }
                 .align(Alignment.CenterVertically),
             value = textValue.value,
@@ -82,50 +80,15 @@ fun SearchSection(
             ),
             shape = RoundedCornerShape(100f)
         )
-        FloatingActionButton(
-            onClick = { navController.navigate("MapPage") },
-            backgroundColor = CanvasBrown,
-            shape = RoundedCornerShape(15.dp)
-        ) {
-            Icon(imageVector = Icons.Outlined.LocationOn, contentDescription = "Map")
-        }
     }
     if (state) {
-        ShopListInSearch(state = textValue, navController)
+        ShopListInSearchByTag(state = textValue, navController)
     }
 }
 
-@Composable
-fun ShopListItem(nameText: String, image: String?, onItemClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clickable(onClick = { onItemClick() })
-            .background(BackgroundColor)
-            .height(70.dp)
-            .fillMaxWidth()
-            .padding(PaddingValues(8.dp, 16.dp))
-    ) {
-        RoundImage(image = rememberImagePainter(image))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(start = 30.dp)
-        ) {
-            Text(
-                text = nameText,
-                fontSize = 18.sp,
-                color = CanvasBrown,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-    Divider(Modifier.height(1.dp), color = CanvasBrown)
-}
 
 @Composable
-fun ShopListInSearch(
-    state: MutableState<TextFieldValue>,
-    navController: NavHostController
-) {
+fun ShopListInSearchByTag(state: MutableState<TextFieldValue>, navController: NavHostController) {
     val shopList = ArrayList<Shop>()
     ShopRepository.data.value.forEach { item ->
         shopList.add(ShopRepository.getShop(item.key!!)!!)
@@ -141,6 +104,17 @@ fun ShopListInSearch(
         } else {
             val resultList = ArrayList<Shop>()
             for (shop in shopList) {
+                shop.menu.forEach { product ->
+                    product.tags.forEach { tag ->
+                        if (
+                            tag.name!!.lowercase(Locale.getDefault())
+                                .contains(state.value.text.lowercase(Locale.getDefault()))
+                            || product.name!!.lowercase(Locale.getDefault())
+                                .contains(state.value.text.lowercase(Locale.getDefault()))
+                        ) resultList.add(shop)
+
+                    }
+                }
                 if (shop.name!!.lowercase(Locale.getDefault())
                         .contains(state.value.text.lowercase(Locale.getDefault()))
                     || shop.description!!.lowercase(Locale.getDefault())
@@ -153,7 +127,7 @@ fun ShopListInSearch(
             }
             filteredShops = resultList
         }
-        items(filteredShops.distinct().asReversed()) { filteredShop ->
+        items(filteredShops) { filteredShop ->
             var key = ""
             ShopRepository.data.value.forEach { item ->
                 if (ShopRepository.getShop(item.key!!)!! == filteredShop) {
@@ -162,7 +136,7 @@ fun ShopListInSearch(
             }
             ShopListItem(
                 nameText = filteredShop.name!!,
-                filteredShop.image,
+                image = filteredShop.image,
                 onItemClick = {
                     navController.navigate("Shop/${key}")
                 }

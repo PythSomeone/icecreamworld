@@ -141,7 +141,7 @@ fun ShopScreen(
                 if (!shop.location.isNullOrEmpty()) {
                     FloatingActionButton(
                         onClick = {
-                            navController.navigate("MapPage")
+                            navController.navigate("MapPage/${shopId}")
                         },
                         backgroundColor = CanvasBrown,
                         contentColor = Color.White,
