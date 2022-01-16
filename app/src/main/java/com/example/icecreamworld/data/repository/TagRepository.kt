@@ -103,15 +103,18 @@ class TagUses(
 
         for (product in shop.menu) {
             for (tag in product.tags) {
-                if (tagsUsed.isEmpty())
-                    tagsUsed.add(tag.copy(numberOfUses = 1))
-                else {
-                    for (it in tagsUsed) {
-                        if (it.name == tag.name) {
-                            it.numberOfUses += 1
-                            break
-                        }
+                if (tag.name != "")
+                {
+                    if (tagsUsed.isEmpty())
                         tagsUsed.add(tag.copy(numberOfUses = 1))
+                    else {
+                        for (it in tagsUsed) {
+                            if (it.name == tag.name) {
+                                it.numberOfUses += 1
+                                break
+                            }
+                            tagsUsed.add(tag.copy(numberOfUses = 1))
+                        }
                     }
                 }
             }

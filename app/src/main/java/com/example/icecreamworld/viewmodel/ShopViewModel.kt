@@ -38,7 +38,7 @@ class ShopViewModel : ViewModel() {
 
             id = ShopFormRepository.addShopForm(shopForm = shopForm, uri = uri)
 
-            delay(1000)
+            delay(2000)
 
             ShopFormRepository.approveShopForm(id)
 

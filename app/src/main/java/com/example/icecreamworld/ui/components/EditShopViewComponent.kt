@@ -462,13 +462,6 @@ fun ShopFormSection(
                                 menu = menu.value
                             )
 
-                            Log.i(TAG, "ShopToSubmit = $shopToSubmit")
-                            viewModel.sendForm(
-                                shop = shopToSubmit,
-                                toChange = shopId,
-                                uri = imageUri
-                            )
-
                             if (Firebase.auth.currentUser != null) {
                                 viewModel.editShop(
                                     shop = shopToSubmit,
