@@ -84,14 +84,6 @@ fun MapScreen(
                 Box(modifier = Modifier.weight(1f)) {
                     GoogleMaps(currentLat, currentLng, value, shopId)
                 }
-//                LazyColumn(
-//                    modifier = Modifier.weight(1f),
-//                    contentPadding = PaddingValues(16.dp)
-//                ) {
-//                    items(shopList) { shop ->
-//                        ShopsCard(navController, shop.name!!, shop.description!!, shop.image!!)
-//                    }
-//                }
             }
 
         }
