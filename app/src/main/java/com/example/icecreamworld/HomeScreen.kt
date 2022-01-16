@@ -21,10 +21,9 @@ import com.google.firebase.ktx.Firebase
 fun HomeScreen(navController: NavHostController) {
 
     HomeScreenBackground()
-    val menu: String = if (Firebase.auth.currentUser!= null){
+    val menu: String = if (Firebase.auth.currentUser != null) {
         "Menu"
-    }
-    else{
+    } else {
         "Guest"
     }
     Box(

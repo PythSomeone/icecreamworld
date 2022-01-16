@@ -1,23 +1,17 @@
 package com.example.icecreamworld.ui.components
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -33,12 +27,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun GoogleMaps(currentLocation: Location) {
+fun GoogleMaps(
+    currentLat: Double,
+    currentLng: Double,
+    value: MutableState<TextFieldValue>,
+    shopId: String?
+) {
     val mapView = rememberMapViewWithLifeCycle()
     val latlng =
-        remember { mutableStateOf("lat : ${currentLocation.latitude},lang: ${currentLocation.longitude}") }
+        remember { mutableStateOf("lat : ${currentLat},lang: ${currentLng}") }
     val geocoder = Geocoder(LocalContext.current)
-    Box() {
+
+    Box {
 
         Column(
             modifier = Modifier
@@ -53,8 +53,25 @@ fun GoogleMaps(currentLocation: Location) {
                         it.mapType = 1
                         it.uiSettings.isZoomControlsEnabled = true
                         val currentLatLng =
-                            LatLng(currentLocation.latitude, currentLocation.longitude)
-                        it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+                            LatLng(currentLat, currentLng)
+                        if (shopId == null) {
+                            it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+                        }
+
+                        if (shopId != null) {
+                            val shopLocation = ShopRepository.getShop(shopId)?.location
+                            val shopAddress = geocoder.getFromLocationName(shopLocation, 1)
+                            if (shopAddress.isNotEmpty()) {
+                                it.moveCamera(
+                                    CameraUpdateFactory.newLatLngZoom(
+                                        LatLng(
+                                            shopAddress[0].latitude,
+                                            shopAddress[0].longitude
+                                        ), 12f
+                                    )
+                                )
+                            }
+                        }
                         it.setOnCameraIdleListener {
                             it.clear()
                             it.addMarker(
@@ -65,16 +82,35 @@ fun GoogleMaps(currentLocation: Location) {
                             latlng.value = ("lat: ${it.cameraPosition.target.latitude}," +
                                     " lang: ${it.cameraPosition.target.longitude}")
                             ShopRepository.data.value.forEach { snapshot ->
-                                val currentAddress = geocoder.getFromLocationName(snapshot.getValue<Shop>()?.location!!,1)
-                                if (currentAddress.isNotEmpty()){
-                                    val specifiedLatLng = LatLng(currentAddress[0].latitude,currentAddress[0].longitude)
+                                val currentAddress = geocoder.getFromLocationName(
+                                    snapshot.getValue<Shop>()?.location!!,
+                                    1
+                                )
+                                if (currentAddress.isNotEmpty()) {
+                                    val specifiedLatLng = LatLng(
+                                        currentAddress[0].latitude,
+                                        currentAddress[0].longitude
+                                    )
                                     it.addMarker(
                                         MarkerOptions()
                                             .position(specifiedLatLng)
                                             .title(snapshot.getValue<Shop>()?.name)
+                                            .snippet(snapshot.getValue<Shop>()?.location)
                                     )
+                                    it.setOnMarkerClickListener { marker ->
+                                        if (marker.title.isNotEmpty() && marker.title != "Your position") {
+                                            value.value = TextFieldValue(marker.title)
+                                        }
+                                        if (marker.isInfoWindowShown) {
+                                            marker.hideInfoWindow()
+                                        } else {
+                                            marker.showInfoWindow()
+                                        }
+                                        true
+                                    }
                                 }
                             }
+
                         }
 
                     }

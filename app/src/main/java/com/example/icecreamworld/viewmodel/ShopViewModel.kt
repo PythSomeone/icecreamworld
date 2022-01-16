@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class ShopViewModel : ViewModel() {
     private val loadingState = MutableStateFlow(LoadingState.IDLE)
 
-    fun sendForm(shop: Shop, toChange: String?=null, uri: Uri?=null) = viewModelScope.launch {
+    fun sendForm(shop: Shop, toChange: String? = null, uri: Uri? = null) = viewModelScope.launch {
         try {
             loadingState.emit(LoadingState.LOADING)
 
@@ -29,11 +29,11 @@ class ShopViewModel : ViewModel() {
         }
     }
 
-    fun editShop(shop: Shop, toChange: String?=null, uri: Uri?=null) = viewModelScope.launch {
+    fun editShop(shop: Shop, toChange: String? = null, uri: Uri? = null) = viewModelScope.launch {
         try {
             loadingState.emit(LoadingState.LOADING)
 
-            val id : String
+            val id: String
             val shopForm = ShopForm(shop = shop, toChange = toChange)
 
             id = ShopFormRepository.addShopForm(shopForm = shopForm, uri = uri)

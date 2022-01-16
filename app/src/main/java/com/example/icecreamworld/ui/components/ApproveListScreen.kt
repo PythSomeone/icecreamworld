@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.icecreamworld.data.repository.ShopFormRepository
-import com.example.icecreamworld.data.repository.ShopRepository
-import com.example.icecreamworld.model.Shop
 import com.example.icecreamworld.model.ShopForm
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
@@ -30,7 +28,7 @@ import com.google.firebase.database.ktx.getValue
 
 @ExperimentalMaterialApi
 @Composable
-fun ApproveListScreen(navController: NavController){
+fun ApproveListScreen(navController: NavController) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "Select the shop to approve"
@@ -70,7 +68,7 @@ fun ApproveListScreen(navController: NavController){
                     val formId = snapshot.key
                     ListItem(
                         Modifier.clickable { navController.navigate("ManageForm/${formId.toString()}") },
-                        text = {Text(snapshot.getValue<ShopForm>()?.shop?.name!!)},
+                        text = { Text(snapshot.getValue<ShopForm>()?.shop?.name!!) },
                         trailing = {
                             //Icon(Icons.Default.Delete, "Delete", Modifier.clickable { ShopRepository.deleteShop(snapshot.getValue<Shop>()?.name!!) })
                         }

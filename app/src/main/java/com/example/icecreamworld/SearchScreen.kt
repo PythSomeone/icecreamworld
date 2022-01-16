@@ -29,6 +29,7 @@ import com.google.firebase.database.ktx.getValue
 @Composable
 fun SearchScreen(openDrawer: () -> Unit, navController: NavHostController) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
+    var valueByTag = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "Search"
     val shops = ShopRepository
@@ -68,7 +69,16 @@ fun SearchScreen(openDrawer: () -> Unit, navController: NavHostController) {
                 navController = navController
             )
             Spacer(modifier = Modifier.height(50.dp))
-            SearchByTagsSection(textValue = value, label = "Product Name - Tag", onDoneActionClick = { view.clearFocus() }, onValueChanged = {}, navController = navController, onClearClick = {value = value;view.clearFocus()})
+            SearchByTagsSection(
+                textValue = valueByTag,
+                label = "Product Name - Tag",
+                onDoneActionClick = { view.clearFocus() },
+                onValueChanged = {},
+                navController = navController,
+                onClearClick = {
+                    valueByTag = valueByTag
+                    view.clearFocus()
+                })
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),

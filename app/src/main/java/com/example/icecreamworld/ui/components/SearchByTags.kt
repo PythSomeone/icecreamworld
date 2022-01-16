@@ -1,6 +1,9 @@
 package com.example.icecreamworld.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +45,8 @@ fun SearchByTagsSection(
     }
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 40.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
@@ -78,15 +82,15 @@ fun SearchByTagsSection(
         )
     }
     if (state) {
-        ShopListInSearchByTag(state = textValue)
+        ShopListInSearchByTag(state = textValue, navController)
     }
 }
 
 
 @Composable
-fun ShopListInSearchByTag(state: MutableState<TextFieldValue>) {
+fun ShopListInSearchByTag(state: MutableState<TextFieldValue>, navController: NavHostController) {
     val shopList = ArrayList<Shop>()
-    ShopRepository.data.value.forEach { item->
+    ShopRepository.data.value.forEach { item ->
         shopList.add(ShopRepository.getShop(item.key!!)!!)
     }
     var filteredShops: ArrayList<Shop>
@@ -100,9 +104,9 @@ fun ShopListInSearchByTag(state: MutableState<TextFieldValue>) {
         } else {
             val resultList = ArrayList<Shop>()
             for (shop in shopList) {
-                shop.menu.forEach {  product ->
+                shop.menu.forEach { product ->
                     product.tags.forEach { tag ->
-                        if(
+                        if (
                             tag.name!!.lowercase(Locale.getDefault())
                                 .contains(state.value.text.lowercase(Locale.getDefault()))
                             || product.name!!.lowercase(Locale.getDefault())
@@ -124,12 +128,18 @@ fun ShopListInSearchByTag(state: MutableState<TextFieldValue>) {
             filteredShops = resultList
         }
         items(filteredShops) { filteredShop ->
+            var key = ""
+            ShopRepository.data.value.forEach { item ->
+                if (ShopRepository.getShop(item.key!!)!! == filteredShop) {
+                    key = item.key!!
+                }
+            }
             ShopListItem(
                 nameText = filteredShop.name!!,
+                image = filteredShop.image,
                 onItemClick = {
-
-                },
-                image = filteredShop.image
+                    navController.navigate("Shop/${key}")
+                }
             )
         }
     }

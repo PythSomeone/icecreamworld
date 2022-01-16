@@ -32,7 +32,7 @@ fun ManageFormsPage(
 ) {
     var shopForm = Shop()
     val form = ShopFormRepository.getShopForm(shopFormId!!)
-    if(form != null){
+    if (form != null) {
         shopForm = form.shop!!
     }
 
@@ -53,16 +53,15 @@ fun ManageFormsPage(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(Modifier.fillMaxWidth()){
-                Icon(Icons.Default.ArrowBack,"Back",
+            Row(Modifier.fillMaxWidth()) {
+                Icon(Icons.Default.ArrowBack, "Back",
                     Modifier
                         .clickable { navController.navigateUp() }
                         .padding(top = 15.dp, start = 0.dp))
             }
-            if(form?.toChange == null){
+            if (form?.toChange == null) {
                 AddShopTextBox()
-            }
-            else{
+            } else {
                 EditShopTextBox()
             }
             Column(
@@ -108,35 +107,36 @@ fun ManageFormsPage(
                 fontWeight = FontWeight.Bold
             )
             shopForm.menu.forEach { item ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = MaterialTheme.shapes.medium,
-                backgroundColor = BackgroundCardColor
-            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    shape = MaterialTheme.shapes.medium,
+                    backgroundColor = BackgroundCardColor
+                ) {
 
 
-                        Box(modifier = Modifier
+                    Box(
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(14.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.align(Alignment.BottomStart),
-                                text = item.name!!,
-                                color = OutlineBrown,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                text = item.price.toString() + "€",
-                                color = OutlineBrown,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                    ) {
+                        Text(
+                            modifier = Modifier.align(Alignment.BottomStart),
+                            text = item.name!!,
+                            color = OutlineBrown,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            modifier = Modifier.align(Alignment.BottomEnd),
+                            text = item.price.toString() + "€",
+                            color = OutlineBrown,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -185,7 +185,6 @@ fun ManageFormsPage(
                 }
 
 
-
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -195,6 +194,7 @@ fun ManageFormsPage(
 
     }
 }
+
 @Composable
 fun AcceptAddTextBox() {
     Text(
@@ -204,6 +204,7 @@ fun AcceptAddTextBox() {
 
     )
 }
+
 @Composable
 fun AcceptEditTextBox() {
     Text(

@@ -91,22 +91,25 @@ fun SearchSection(
         }
     }
     if (state) {
-        ShopListInSearch(state = textValue)
+        ShopListInSearch(state = textValue, navController)
     }
 }
 
 @Composable
-fun ShopListItem(nameText: String, onItemClick: (String) -> Unit, image: String?) {
+fun ShopListItem(nameText: String, image: String?, onItemClick: () -> Unit) {
     Row(
         modifier = Modifier
-            .clickable(onClick = { /*TODO*/ })
+            .clickable(onClick = { onItemClick() })
             .background(BackgroundColor)
             .height(70.dp)
             .fillMaxWidth()
             .padding(PaddingValues(8.dp, 16.dp))
     ) {
         RoundImage(image = rememberImagePainter(image))
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(start = 30.dp)) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(start = 30.dp)
+        ) {
             Text(
                 text = nameText,
                 fontSize = 18.sp,
@@ -115,13 +118,16 @@ fun ShopListItem(nameText: String, onItemClick: (String) -> Unit, image: String?
             )
         }
     }
-    Divider(Modifier.height(1.dp),color = CanvasBrown)
+    Divider(Modifier.height(1.dp), color = CanvasBrown)
 }
 
 @Composable
-fun ShopListInSearch(state: MutableState<TextFieldValue>) {
+fun ShopListInSearch(
+    state: MutableState<TextFieldValue>,
+    navController: NavHostController
+) {
     val shopList = ArrayList<Shop>()
-    ShopRepository.data.value.forEach { item->
+    ShopRepository.data.value.forEach { item ->
         shopList.add(ShopRepository.getShop(item.key!!)!!)
     }
     var filteredShops: ArrayList<Shop>
@@ -147,13 +153,19 @@ fun ShopListInSearch(state: MutableState<TextFieldValue>) {
             }
             filteredShops = resultList
         }
-        items(filteredShops) { filteredShop ->
+        items(filteredShops.distinct().asReversed()) { filteredShop ->
+            var key = ""
+            ShopRepository.data.value.forEach { item ->
+                if (ShopRepository.getShop(item.key!!)!! == filteredShop) {
+                    key = item.key!!
+                }
+            }
             ShopListItem(
                 nameText = filteredShop.name!!,
-                onItemClick = { selectedShop ->
-                    /* Add code later */
-                },
-                filteredShop.image
+                filteredShop.image,
+                onItemClick = {
+                    navController.navigate("Shop/${key}")
+                }
             )
         }
     }

@@ -11,8 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -35,8 +33,14 @@ fun ManagementScreen(navController: NavHostController) {
     var selectedText by remember { mutableStateOf("Choose what you want to do") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
-    Row(Modifier.fillMaxWidth()){
-        Icon(Icons.Default.ArrowBack,"Back", Modifier.clickable { navController.navigateUp() }.padding(top = 15.dp, start = 15.dp))
+    Row(Modifier.fillMaxWidth()) {
+        Icon(
+            Icons.Default.ArrowBack,
+            "Back",
+            Modifier
+                .clickable { navController.navigateUp() }
+                .padding(top = 15.dp, start = 15.dp)
+        )
     }
     Column(
         horizontalAlignment = CenterHorizontally,
@@ -57,15 +61,21 @@ fun ManagementScreen(navController: NavHostController) {
             )
         }
         Spacer(modifier = Modifier.height(50.dp))
-        Column(verticalArrangement = Arrangement.Center,horizontalAlignment = CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(horizontal = 80.dp)) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 80.dp)
+        ) {
             Button(
-                onClick = {expanded = true},
+                onClick = { expanded = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .onGloballyPositioned { coordinates ->
                         textFieldSize = coordinates.size.toSize()
                     },
-                content = {Text(text = selectedText)},
+                content = { Text(text = selectedText) },
                 colors = ButtonDefaults.buttonColors(backgroundColor = ButtonBrown)
             )
             DropdownMenu(
@@ -75,16 +85,18 @@ fun ManagementScreen(navController: NavHostController) {
                     .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
             ) {
                 suggestions.forEach { label ->
-                    DropdownMenuItem(onClick = {
-                        selectedText = label
-                        if(selectedText == "Manage ICS forms"){
-                            navController.navigate("ApproveListScreen")
-                        }
-                        if(selectedText == "Manage ICS"){
-                            navController.navigate("EditListScreen")
-                        }
-                    },
-                    modifier = Modifier.background(color = BackgroundCardColor)) {
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedText = label
+                            if (selectedText == "Manage ICS forms") {
+                                navController.navigate("ApproveListScreen")
+                            }
+                            if (selectedText == "Manage ICS") {
+                                navController.navigate("EditListScreen")
+                            }
+                        },
+                        modifier = Modifier.background(color = BackgroundCardColor)
+                    ) {
                         Column(horizontalAlignment = CenterHorizontally) {
                             Text(text = label)
                             Divider()
