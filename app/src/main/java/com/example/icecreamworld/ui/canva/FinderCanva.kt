@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 
@@ -34,45 +35,70 @@ fun IceCreamWorldCanvas() {
         textAlign = android.graphics.Paint.Align.CENTER
     }
 
+    val config = LocalConfiguration.current
+
+    val screenWidth = config.screenWidthDp.dp
+
 
     Canvas(
         modifier = Modifier.fillMaxWidth(),
         onDraw = {
+            val iceX: Int
+            val creamX: Int
+            val worldX: Int
+            val iceY: Int
+            val creamY: Int
+            val worldY: Int
+            if (screenWidth > 900.dp) {
+                iceX = 380
+                creamX = 80
+                worldX = 290
+                iceY = 80
+                creamY = 80
+                worldY = 80
+            } else {
+                iceX = 120
+                creamX = -60
+                worldX = 0
+                iceY = 40
+                creamY = 40
+                worldY = 90
+            }
             drawIntoCanvas {
                 it.nativeCanvas.drawText(
                     "Ice",
-                    center.x.minus(380),
-                    80.dp.toPx(),
+                    center.x.minus(iceX),
+                    iceY.dp.toPx(),
                     textPaintStroke
                 )
                 it.nativeCanvas.drawText(
                     "Ice",
-                    center.x.minus(380),
-                    80.dp.toPx(),
+                    center.x.minus(iceX),
+                    iceY.dp.toPx(),
                     textPaint
                 )
                 it.nativeCanvas.drawText(
                     "Cream",
-                    center.x.minus(80),
-                    80.dp.toPx(),
+                    center.x.minus(creamX),
+                    creamY.dp.toPx(),
                     textPaintStroke
                 )
                 it.nativeCanvas.drawText(
                     "Cream",
-                    center.x.minus(80),
-                    80.dp.toPx(),
+                    center.x.minus(creamX),
+                    creamY.dp.toPx(),
                     textPaint
                 )
                 it.nativeCanvas.drawText(
                     "World",
-                    center.x.plus(290),
-                    80.dp.toPx(),
+                    center.x.plus(worldX),
+                    worldY.dp.toPx(),
                     textPaintStroke
                 )
                 it.nativeCanvas.drawText(
                     "World",
-                    center.x.plus(290),
-                    80.dp.toPx(),
+                    center.x.plus(worldX),
+                    worldY.dp.toPx(),
                     textPaint
                 )
             }
