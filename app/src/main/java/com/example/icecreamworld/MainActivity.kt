@@ -2,11 +2,11 @@ package com.example.icecreamworld
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.core.app.ActivityCompat
@@ -16,6 +16,7 @@ import com.example.icecreamworld.data.repository.ShopRepository
 import com.example.icecreamworld.data.repository.TagRepository
 import com.example.icecreamworld.navigation.NavigationPage
 import com.example.icecreamworld.ui.theme.IceCreamWorldTheme
+import com.example.icecreamworld.viewmodel.MainActivityViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -29,10 +30,9 @@ private fun initializeListeners() {
 }
 
 class MainActivity : ComponentActivity() {
-//    private val authViewModel: AuthViewModel by viewModels()
+    private val viewModel by viewModels<MainActivityViewModel>()
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var geocoder: Geocoder
 
     @ExperimentalMaterialApi
     @ExperimentalFoundationApi
@@ -41,33 +41,48 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (listenersInitialized.not())
             initializeListeners()
-        try {
-            if (ContextCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                    applicationContext,
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ),
-                    101
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+                ),
+                101
+            )
         }
-        val location = fusedLocationClient.lastLocation
+
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val locationResult = fusedLocationClient.lastLocation
+
+            locationResult.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val lastKnownLocation = task.result
+
+                    if (lastKnownLocation != null) {
+                        viewModel.location.value = lastKnownLocation
+
+                    }
+                } else {
+                    Log.d("Exception", " Current User location is null")
+                }
+            }
+        }
 
         setContent {
             IceCreamWorldTheme {
-                NavigationPage(location)
-//                EditShopScreen(navController = rememberNavController(), shopId = null)
+                NavigationPage(viewModel.location.value)
             }
         }
     }
