@@ -15,25 +15,21 @@ import java.util.*
 
 object TagRepository : Repository(Handler(Folder.Tags)) {
 
-    fun addTag(tag: Tag) {
+    internal fun addTag(tag: Tag) {
         data.value.forEach {
-            if (it.getValue<Tag>()!!.name!!.replaceFirstChar {
-                    if (it.isLowerCase()) it.titlecase(
-                        Locale.getDefault()
-                    ) else it.toString()
-                } == tag.name)
+            if (it.getValue<Tag>()!!.name!! == tag.name)
                 return
         }
         handler.addValue(
-            tag.copy(name = tag.name!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+            tag.copy(name = tag.name!!)
         )
     }
 
-    fun changeTag(id: String, tag: Tag) {
+    internal fun changeTag(id: String, tag: Tag) {
         handler.changeValue(id, tag)
     }
 
-    fun deleteTag(id: String) {
+    internal fun deleteTag(id: String) {
         handler.deleteValue(id)
     }
 
@@ -108,13 +104,16 @@ class TagUses(
                     if (tagsUsed.isEmpty())
                         tagsUsed.add(tag.copy(numberOfUses = 1))
                     else {
+                        var found = false
                         for (it in tagsUsed) {
                             if (it.name == tag.name) {
                                 it.numberOfUses += 1
+                                found = true
                                 break
                             }
-                            tagsUsed.add(tag.copy(numberOfUses = 1))
                         }
+                        if (found.not())
+                            tagsUsed.add(tag.copy(numberOfUses = 1))
                     }
                 }
             }
@@ -125,12 +124,15 @@ class TagUses(
                     if (tagsUsed.isEmpty())
                         tagsUsed.add(tag.copy(numberOfUses = -1))
                     else {
+                        var found = false
                         for (it in tagsUsed) {
                             if (it.name == tag.name) {
                                 it.numberOfUses -= 1
+                                found = true
                                 break
                             }
-                            tagsUsed.add(tag.copy(numberOfUses = -1))
+                            if (found.not())
+                                tagsUsed.add(tag.copy(numberOfUses = -1))
                         }
                     }
                 }
@@ -145,7 +147,7 @@ class TagUses(
         val tagId = TagRepository.getId(tag.name)
 
         if (tagId == null)
-            TagRepository.addTag(tag.copy(numberOfUses = tag.numberOfUses + numberOfUses))
+            TagRepository.addTag(tag.copy(numberOfUses = tag.numberOfUses))
         else {
             val tag = TagRepository.getTag(tagId)
             TagRepository.changeTag(

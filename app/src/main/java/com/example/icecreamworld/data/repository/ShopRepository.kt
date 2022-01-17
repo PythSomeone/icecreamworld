@@ -15,25 +15,25 @@ import com.google.firebase.database.ktx.getValue
 
 object ShopRepository : Repository(Handler(Folder.Shops)) {
 
-    internal fun addShop(shop: Shop, uri: Uri? = null) {
+    internal fun addShop(shop: Shop) {
         if (shopExists(shop).not()) {
             handler.addValue(shop)
-            TagUses(shop).increase()
+            //TagUses(shop).increase()
         }
     }
 
-    internal fun changeShop(id: String, changedShop: Shop, uri: Uri? = null) {
+    internal fun changeShop(id: String, changedShop: Shop) {
         getShop(id)?.let {
             if (it == changedShop)
                 return
             handler.changeValue(id, changedShop)
-            TagUses(changedShop, it).increase()
+            //TagUses(changedShop, it).increase()
         }
     }
 
     fun deleteShop(id: String) {
         getShop(id)?.let {
-            TagUses(it).decrease()
+            //TagUses(it).decrease()
             handler.deleteValue(id)
             StorageHandler.removePicture(it.image!!)
         }
@@ -85,6 +85,10 @@ object ShopRepository : Repository(Handler(Folder.Shops)) {
 object ShopFormRepository : Repository(Handler(Folder.ShopForms)) {
 
     suspend fun addShopForm(shopForm: ShopForm, uri: Uri? = null): String {
+        if (shopForm.toChange != null && uri == null) {
+            shopForm.shop!!.image =
+                ShopRepository.getShop(shopForm.toChange)!!.image
+        }
         val id: String = handler.addValue(shopForm)
         if (uri != null) {
             setPicture(
@@ -102,7 +106,11 @@ object ShopFormRepository : Repository(Handler(Folder.ShopForms)) {
 
         if (shopForm.toChange != null) {
             val shopToChange = ShopRepository.getShop(shopForm.toChange)
-            if (shopForm.shop.image != shopToChange!!.image)
+            if (shopToChange == null) {
+                handler.deleteValue(id)
+                return
+            }
+            if (shopForm.shop.image != shopToChange.image)
                 StorageHandler.removePicture(shopToChange.image!!)
             ShopRepository.changeShop(shopForm.toChange, shopForm.shop)
         } else
