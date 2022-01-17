@@ -37,8 +37,7 @@ fun IceCreamWorldCanvas() {
 
     val config = LocalConfiguration.current
 
-    val screenWidth = config.screenWidthDp.dp
-
+    val screenWidth = config.screenWidthDp
 
     Canvas(
         modifier = Modifier.fillMaxWidth(),
@@ -49,7 +48,7 @@ fun IceCreamWorldCanvas() {
             val iceY: Int
             val creamY: Int
             val worldY: Int
-            if (screenWidth > 900.dp) {
+            if (screenWidth > 390) {
                 iceX = 380
                 creamX = 80
                 worldX = 290
