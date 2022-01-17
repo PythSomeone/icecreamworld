@@ -27,7 +27,6 @@ import com.example.icecreamworld.ui.components.ShopsCard
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.Task
 import com.google.firebase.database.ktx.getValue
 import com.google.maps.android.SphericalUtil
 
@@ -36,23 +35,15 @@ import com.google.maps.android.SphericalUtil
 fun ProposedScreen(
     openDrawer: () -> Unit,
     navController: NavHostController,
-    location: Task<Location>
+    location: Location
 ) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "The nearest ice cream shop"
     val shops = ShopRepository
-    val currentLocation = location.result
     val geocoder = Geocoder(LocalContext.current)
-    val currentLng: Double
-    val currentLat: Double
-    if (currentLocation != null) {
-        currentLng = currentLocation.longitude
-        currentLat = currentLocation.latitude
-    } else {
-        currentLat = geocoder.getFromLocationName("Legnica", 1)[0].latitude
-        currentLng = geocoder.getFromLocationName("Legnica", 1)[0].longitude
-    }
+    val currentLng: Double = location.longitude
+    val currentLat: Double = location.latitude
     var specifiedLat: Double
     var specifiedLng: Double
 

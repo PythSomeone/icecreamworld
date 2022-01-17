@@ -1,6 +1,5 @@
 package com.example.icecreamworld
 
-import android.location.Geocoder
 import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,29 +20,19 @@ import com.example.icecreamworld.ui.components.GoogleMaps
 import com.example.icecreamworld.ui.components.SearchSection
 import com.example.icecreamworld.ui.theme.BackgroundColor
 import com.example.icecreamworld.ui.theme.CanvasBrown
-import com.google.android.gms.tasks.Task
 
 @Composable
 fun MapScreen(
     openDrawer: () -> Unit,
     navController: NavHostController,
-    location: Task<Location>,
+    location: Location,
     shopId: String?
 ) {
     var value = remember { mutableStateOf(TextFieldValue("")) }
     val view = LocalView.current
     val text = "ICS Maps"
-    val currentLocation = location.result
-    val geocoder = Geocoder(LocalContext.current)
-    val currentLng: Double
-    val currentLat: Double
-    if (currentLocation != null) {
-        currentLng = currentLocation.longitude
-        currentLat = currentLocation.latitude
-    } else {
-        currentLat = geocoder.getFromLocationName("Legnica", 1)[0].latitude
-        currentLng = geocoder.getFromLocationName("Legnica", 1)[0].longitude
-    }
+    val currentLng: Double = location.longitude
+    val currentLat: Double = location.latitude
 
     Box(
         Modifier
