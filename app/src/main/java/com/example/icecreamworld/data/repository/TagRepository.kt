@@ -10,7 +10,6 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
-import java.util.*
 
 
 object TagRepository : Repository(Handler(Folder.Tags)) {
@@ -99,8 +98,7 @@ class TagUses(
 
         for (product in shop.menu) {
             for (tag in product.tags) {
-                if (tag.name != "")
-                {
+                if (tag.name != "") {
                     if (tagsUsed.isEmpty())
                         tagsUsed.add(tag.copy(numberOfUses = 1))
                     else {
