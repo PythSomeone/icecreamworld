@@ -446,6 +446,7 @@ fun ShopFormSection(
                     Spacer(Modifier.height(30.dp))
 
                     Button(
+                        enabled = name.value?.isNotEmpty()!!,
                         onClick = {
 
                             Toast.makeText(
