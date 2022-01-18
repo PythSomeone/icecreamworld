@@ -289,13 +289,16 @@ fun ShopFormSection(
                     modifier = modifier
                         .fillMaxWidth()
                 ) {
+                    var productToChange by remember {
+                        mutableStateOf(Product())
+                    }
                     menu.value.forEach { item ->
                         if (editAlertDialog.value) {
-                            productName = item.name!!
-                            price = item.price.toString()
-                            tag1 = item.tags[0].name!!
-                            tag2 = item.tags[1].name!!
-                            tag3 = item.tags[2].name!!
+                            productName = productToChange.name!!
+                            price = productToChange.price.toString()
+                            tag1 = productToChange.tags[0].name!!
+                            tag2 = productToChange.tags[1].name!!
+                            tag3 = productToChange.tags[2].name!!
                             AlertDialog(onDismissRequest = { editAlertDialog.value = false },
                                 title = { Text(text = "Now you can edit product") },
                                 text = {
@@ -333,7 +336,7 @@ fun ShopFormSection(
                                 confirmButton = {
                                     enabled.value = productName.isNotEmpty() && price.isNotEmpty()
                                     Button(onClick = {
-                                        menu.value.remove(item)
+                                        menu.value.remove(productToChange)
                                         menu.value.add(
                                             Product(
                                                 productName,
@@ -394,7 +397,10 @@ fun ShopFormSection(
                                         Icon(
                                             Icons.Default.Edit, "Edit",
                                             Modifier
-                                                .clickable { editAlertDialog.value = true }
+                                                .clickable {
+                                                    editAlertDialog.value = true
+                                                    productToChange = item
+                                                }
                                                 .padding(top = 30.dp)
                                         )
                                         Icon(
